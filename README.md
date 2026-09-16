@@ -10,7 +10,7 @@ Une seule page HTML, sans installation, sans connexion : elle marche sur Mac, Wi
 
 **Sur Mac** : télécharge le dépôt (bouton *Code → Download ZIP*, ou `git clone`), décompresse, puis double-clique sur `index.html`. Safari, Chrome ou Firefox conviennent. Si macOS demande une confirmation la première fois, clic droit → *Ouvrir*.
 
-**En classe, sans rien distribuer** : active GitHub Pages sur le dépôt (*Settings → Pages → Branch: main, folder: / (root)*). Le générateur est alors accessible à une adresse `https://<compte>.github.io/<dépôt>/` que les étudiants ouvrent sur leur propre machine.
+**En classe, sans rien distribuer** : le générateur est en ligne à l’adresse **<https://theovoneuw-cell.github.io/sujets-sound-design/>** (GitHub Pages, mis à jour automatiquement à chaque push sur `main`). Les étudiants l’ouvrent sur leur propre machine, sans rien télécharger.
 
 Toute la page est un téléviseur cathodique : réglages à gauche, sujet diffusé à droite, chrono et réglages d'image sur la façade du bas. Tout tient en une seule vue, sans défilement.
 
