@@ -1,3 +1,5 @@
+<p align="center"><img src="logo/logo-256.png" width="128" height="128" alt="Logo : téléviseur cathodique avec une onde sonore ambre"></p>
+
 # Générateur de sujets — Sound design & composition
 
 Un tirage de sujets d'exercice pour des étudiants de 3ᵉ année en sound design.
@@ -56,6 +58,20 @@ Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une foi
 | **Chrono** | 15 min à 3 h. Trois bips à la fin, puis il passe en négatif pour montrer le dépassement. Il s'affiche aussi en bas à droite de l'écran. |
 | **Phosphore** | Ambre / vert / blanc — retinte toute l'interface. |
 | **Balayage** | Coupe les lignes de balayage si elles gênent la lecture (vidéoprojecteur, écran fatigué). |
+
+## Logo et icône pour le bureau du Mac
+
+Le dossier [logo/](logo/) contient le logo en SVG, en PNG (16 à 1024 px) et en **`SujetsSoundDesign.icns`**, l’icône macOS.
+
+Pour avoir le générateur sur le bureau avec cette icône :
+
+1. Dans Safari, ouvre <https://theovoneuw-cell.github.io/sujets-sound-design/> et glisse l’adresse (le petit cadenas / l’icône à gauche de l’URL) sur le bureau : un raccourci `.webloc` est créé.
+2. Ouvre `logo/SujetsSoundDesign.icns` dans Aperçu, ⌘A puis ⌘C.
+3. Sélectionne le raccourci sur le bureau, ⌘I (Lire les informations), clique sur la petite icône en haut à gauche de la fenêtre, puis ⌘V.
+
+Variante « application » : dans Safari, *Fichier → Ajouter au Dock* crée une vraie app dans le Dock (macOS Sonoma ou plus récent) ; on lui change l’icône de la même façon (⌘I sur l’app dans ~/Applications).
+
+Pour régénérer les icônes après une modification du SVG : rends `logo/logo.svg` en PNG 1024×1024 (n’importe quel navigateur ou outil), puis `node outils/fabriquer-icones.js rendu.png`.
 
 ## Contenu de la banque
 

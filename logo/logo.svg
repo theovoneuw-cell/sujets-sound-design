@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- caisse plastique -->
+    <linearGradient id="plastic" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b2d33"/>
+      <stop offset="0.55" stop-color="#1b1c20"/>
+      <stop offset="1" stop-color="#0f1013"/>
+    </linearGradient>
+    <linearGradient id="chin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26272c"/>
+      <stop offset="1" stop-color="#141517"/>
+    </linearGradient>
+    <!-- écran : verre sombre + halo ambre -->
+    <radialGradient id="tube" cx="0.5" cy="0.48" r="0.72">
+      <stop offset="0" stop-color="#1d1707"/>
+      <stop offset="0.6" stop-color="#0d0b06"/>
+      <stop offset="1" stop-color="#050402"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0" stop-color="#e8be78" stop-opacity="0.32"/>
+      <stop offset="0.7" stop-color="#e8be78" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#e8be78" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glare" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.16"/>
+      <stop offset="0.35" stop-color="#fff" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="knob" cx="0.5" cy="0.3" r="0.75">
+      <stop offset="0" stop-color="#474a51"/>
+      <stop offset="1" stop-color="#1a1b1e"/>
+    </radialGradient>
+    <!-- lignes de balayage -->
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="4" fill="#000" fill-opacity="0.28"/>
+    </pattern>
+    <!-- lueur du phosphore -->
+    <filter id="glow" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowSoft" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+    <clipPath id="icon"><rect x="0" y="0" width="1024" height="1024" rx="230"/></clipPath>
+    <clipPath id="screenClip">
+      <rect x="118" y="126" width="788" height="548" rx="92"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#icon)">
+  <!-- fond : carré arrondi macOS -->
+  <rect x="0" y="0" width="1024" height="1024" rx="230" fill="url(#plastic)"/>
+  <!-- arête haute de la caisse -->
+  <rect x="0" y="0" width="1024" height="1024" rx="230" fill="none" stroke="#fff" stroke-opacity="0.07" stroke-width="6"/>
+
+  <!-- ouverture du tube : biseau sombre -->
+  <rect x="96" y="104" width="832" height="592" rx="110" fill="#08090b"/>
+  <rect x="96" y="104" width="832" height="592" rx="110" fill="none" stroke="#000" stroke-width="10"/>
+
+  <!-- écran -->
+  <g clip-path="url(#screenClip)">
+    <rect x="118" y="126" width="788" height="548" fill="url(#tube)"/>
+    <rect x="118" y="126" width="788" height="548" fill="url(#halo)"/>
+
+    <!-- forme d'onde ambre -->
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path filter="url(#glowSoft)" stroke="#e8be78" stroke-opacity="0.55" stroke-width="34"
+        d="M150 400 L230 400 L262 356 L292 444 L324 300 L358 500 L392 250 L426 560 L460 190 L494 612 L528 210 L562 600 L596 240 L630 560 L664 300 L698 500 L732 350 L766 450 L800 380 L834 412 L874 400"/>
+      <path filter="url(#glow)" stroke="#f3dcae" stroke-width="22"
+        d="M150 400 L230 400 L262 356 L292 444 L324 300 L358 500 L392 250 L426 560 L460 190 L494 612 L528 210 L562 600 L596 240 L630 560 L664 300 L698 500 L732 350 L766 450 L800 380 L834 412 L874 400"/>
+    </g>
+
+    <!-- balayage + reflet du verre -->
+    <rect x="118" y="126" width="788" height="548" fill="url(#scan)"/>
+    <rect x="118" y="126" width="788" height="548" fill="url(#glare)"/>
+  </g>
+  <!-- reflet de dalle -->
+  <rect x="118" y="126" width="788" height="548" rx="92" fill="none" stroke="#fff" stroke-opacity="0.10" stroke-width="4"/>
+
+  <!-- façade : grille de haut-parleur + boutons -->
+  <rect x="0" y="736" width="1024" height="288" fill="url(#chin)"/>
+  <rect x="0" y="736" width="1024" height="4" fill="#000"/>
+  <rect x="0" y="740" width="1024" height="3" fill="#fff" fill-opacity="0.06"/>
+
+  <g id="grille" fill="#0a0b0d">
+    <rect x="128" y="812" width="10" height="130" rx="4"/>
+    <rect x="158" y="812" width="10" height="130" rx="4"/>
+    <rect x="188" y="812" width="10" height="130" rx="4"/>
+    <rect x="218" y="812" width="10" height="130" rx="4"/>
+    <rect x="248" y="812" width="10" height="130" rx="4"/>
+    <rect x="278" y="812" width="10" height="130" rx="4"/>
+    <rect x="308" y="812" width="10" height="130" rx="4"/>
+    <rect x="338" y="812" width="10" height="130" rx="4"/>
+    <rect x="368" y="812" width="10" height="130" rx="4"/>
+    <rect x="398" y="812" width="10" height="130" rx="4"/>
+    <rect x="428" y="812" width="10" height="130" rx="4"/>
+    <rect x="458" y="812" width="10" height="130" rx="4"/>
+    <rect x="488" y="812" width="10" height="130" rx="4"/>
+    <rect x="518" y="812" width="10" height="130" rx="4"/>
+    <rect x="548" y="812" width="10" height="130" rx="4"/>
+    <rect x="578" y="812" width="10" height="130" rx="4"/>
+    <rect x="608" y="812" width="10" height="130" rx="4"/>
+    <rect x="638" y="812" width="10" height="130" rx="4"/>
+  </g>
+
+  <!-- témoin allumé -->
+  <circle cx="92" cy="877" r="11" fill="#f0dcb4" filter="url(#glow)"/>
+
+  <!-- deux boutons rotatifs -->
+  <g>
+    <circle cx="768" cy="877" r="58" fill="#000" fill-opacity="0.6"/>
+    <circle cx="768" cy="872" r="54" fill="url(#knob)" stroke="#000" stroke-width="3"/>
+    <rect x="763" y="826" width="10" height="34" rx="4" fill="#f0dcb4" transform="rotate(-40 768 872)"/>
+    <circle cx="904" cy="877" r="58" fill="#000" fill-opacity="0.6"/>
+    <circle cx="904" cy="872" r="54" fill="url(#knob)" stroke="#000" stroke-width="3"/>
+    <rect x="899" y="826" width="10" height="34" rx="4" fill="#f0dcb4" transform="rotate(35 904 872)"/>
+  </g>
+  </g>
+</svg>
