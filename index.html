@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de sujets — Sound Design & Composition</title>
+<style>
+  :root{
+    /* phosphore : retinte TOUTE l'interface (bouton PHOSPHORE) */
+    --ph:#f0dcb4;
+    --ph-mid:#c2a678;
+    --ph-dim:#7d6a4a;
+    --ph-line:#4a3f2c;
+    --ph-glow:rgba(232,190,120,.30);
+    --bg:#080807;
+    --ink:#0a0806;          /* texte sur pavé inversé */
+    --plastic:#1c1d21;      /* la caisse du téléviseur */
+    --mono:"Cascadia Mono",ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  [data-phos="vert"]{
+    --ph:#c6f2cd;--ph-mid:#7fc48d;--ph-dim:#4e7d58;--ph-line:#2d4a34;
+    --ph-glow:rgba(120,240,150,.28);--bg:#060807;--ink:#04120a}
+  [data-phos="blanc"]{
+    --ph:#eef3f8;--ph-mid:#a9b4c0;--ph-dim:#6b7480;--ph-line:#39414b;
+    --ph-glow:rgba(200,220,245,.24);--bg:#07080a;--ink:#06090c}
+
+  *{box-sizing:border-box}
+  html{background:#000}
+  html,body{height:100%;overflow:hidden}   /* tout tient dans le tube : aucun défilement */
+  body{
+    margin:0;background:var(--bg);color:var(--ph);
+    font-family:var(--mono);font-size:14px;line-height:1.55;
+    letter-spacing:.2px;
+    text-shadow:0 0 1px currentColor,0 0 10px var(--ph-glow);
+    -webkit-font-smoothing:antialiased;
+    transition:background .35s}
+  ::selection{background:var(--ph);color:var(--ink);text-shadow:none}
+
+  /* la zone utile = l'ouverture du tube, découpée en deux colonnes */
+  .wrap{position:fixed;inset:24px 24px 72px;padding:26px 34px 20px;
+    display:grid;grid-template-rows:auto auto 1fr;
+    transition:transform .13s ease}
+  .stage{display:grid;grid-template-columns:292px 1fr;gap:30px;min-height:0}
+  .side{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  footer{margin-top:16px}
+  body.zap .wrap{transform:scaleY(.972) scaleX(1.003);filter:brightness(1.5) blur(.4px)}
+
+  /* ================= le tube (couches fixes) ================= */
+  .fx{position:fixed;inset:0;pointer-events:none}
+  .fx-scan{z-index:51;mix-blend-mode:multiply;
+    background:repeating-linear-gradient(to bottom,
+      rgba(0,0,0,0) 0 2px, rgba(0,0,0,.17) 2px 4px)}
+  .fx-grille{z-index:51;opacity:.3;
+    background:repeating-linear-gradient(to right,
+      rgba(255,40,40,.08) 0 1px, rgba(40,255,80,.08) 1px 2px, rgba(60,120,255,.08) 2px 3px)}
+  body.noscan .fx-scan,body.noscan .fx-grille{display:none}
+  .fx-roll{z-index:52;height:34vh;top:-34vh;
+    background:linear-gradient(to bottom,transparent,rgba(255,255,255,.028) 48%,transparent);
+    animation:roll 9.5s linear infinite}
+  @keyframes roll{from{transform:translateY(0)}to{transform:translateY(140vh)}}
+  .fx-grain{z-index:53;opacity:.045;transition:opacity .1s;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain .5s steps(4) infinite}
+  body.zap .fx-grain{opacity:.5}
+  @keyframes grain{
+    0%{background-position:0 0}25%{background-position:-42px 28px}
+    50%{background-position:32px -26px}75%{background-position:-26px -38px}
+    100%{background-position:0 0}}
+  .fx-vig,.fx-glare{inset:24px 24px 72px;border-radius:36px}
+  .fx-vig{z-index:54;
+    /* léger : les coins doivent rester lisibles */
+    background:
+      radial-gradient(circle at 0% 0%,rgba(0,0,0,.34),transparent 15%),
+      radial-gradient(circle at 100% 0%,rgba(0,0,0,.34),transparent 15%),
+      radial-gradient(circle at 0% 100%,rgba(0,0,0,.34),transparent 15%),
+      radial-gradient(circle at 100% 100%,rgba(0,0,0,.34),transparent 15%),
+      radial-gradient(ellipse 98% 96% at 50% 48%,transparent 62%,rgba(0,0,0,.24) 88%,rgba(0,0,0,.45) 100%)}
+  .fx-glare{z-index:55;
+    background:
+      linear-gradient(148deg,rgba(255,255,255,.05) 0%,rgba(255,255,255,.016) 20%,transparent 42%),
+      radial-gradient(ellipse 55% 16% at 50% 1%,rgba(255,255,255,.04),transparent 70%)}
+  .fx-flick{z-index:56;background:#fff;opacity:0;mix-blend-mode:overlay;
+    animation:flick 7s steps(1) infinite}
+  @keyframes flick{
+    0%,7%,7.6%,31%,31.4%,64%,64.5%,88%,100%{opacity:0}
+    7.3%{opacity:.03}31.2%{opacity:.045}64.3%{opacity:.022}88.3%{opacity:.038}}
+  /* ---- la caisse du poste : ouverture bombée du tube + façade plastique ---- */
+  .fx-frame{z-index:57;inset:24px 24px 72px;border-radius:36px;
+    box-shadow:
+      0 0 0 2px #000 inset,                    /* arête du tube */
+      0 0 3px rgba(255,255,255,.11) inset,     /* reflet de la dalle */
+      0 0 70px rgba(0,0,0,.5) inset,           /* assombrissement des bords, mesuré */
+      0 0 34px 6px rgba(0,0,0,.95),            /* ombre portée sur le plastique */
+      0 0 0 100vmax var(--plastic)}            /* la caisse remplit tout le reste */
+  .fx-top{z-index:58;bottom:auto;height:24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0))}
+
+  /* ---- bandeau du bas : marque, grille, boutons ---- */
+  .chin{position:fixed;left:0;right:0;bottom:0;height:72px;z-index:58;
+    display:flex;align-items:center;gap:16px;padding:0 26px;
+    background:linear-gradient(180deg,#212227 0%,#1a1b1f 40%,#111214 100%);
+    border-top:1px solid #000;
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset}
+  .plate{display:flex;align-items:center;gap:10px;flex:none}
+  .led{width:8px;height:8px;border-radius:50%;background:#2c2d31;
+    box-shadow:0 1px 1px rgba(0,0,0,.9) inset;transition:all .3s}
+  body.on .led{background:var(--ph);box-shadow:0 0 10px var(--ph)}
+  .brand{font-size:10.5px;letter-spacing:3.4px;color:#565b64;text-shadow:0 1px 0 rgba(255,255,255,.07)}
+  .speaker{flex:1;height:24px;min-width:40px;border-radius:2px;
+    background:repeating-linear-gradient(90deg,#0d0e10 0 3px,transparent 3px 7px);
+    box-shadow:0 1px 0 rgba(255,255,255,.04)}
+  .knobs{display:flex;gap:16px;flex:none}
+  .knob{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .knob button{width:32px;height:32px;border-radius:50%;padding:0;cursor:pointer;
+    border:1px solid #000;position:relative;
+    background:radial-gradient(circle at 50% 30%,#3d4046,#1b1d20 70%);
+    box-shadow:0 2px 4px rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.10) inset;
+    transition:transform .22s cubic-bezier(.3,1.4,.5,1)}
+  .knob button::after{content:"";position:absolute;left:50%;top:4px;width:2px;height:9px;
+    margin-left:-1px;border-radius:1px;background:var(--ph);box-shadow:0 0 6px var(--ph-glow)}
+  .knob i{font-style:normal;font-size:7.5px;letter-spacing:1.1px;color:#5d636c;text-transform:uppercase}
+  .knob b{font-size:8px;letter-spacing:.8px;color:var(--ph-mid);font-weight:700;text-transform:uppercase}
+  .fx-flash{z-index:56;inset:24px 24px 72px;border-radius:36px;
+    background:var(--ph);opacity:0;transform:scaleY(.004)}
+  body.power .fx-flash{animation:power .6s ease-out}
+  @keyframes power{
+    0%{opacity:.9;transform:scaleY(.004)}
+    45%{opacity:.5;transform:scaleY(.04)}
+    100%{opacity:0;transform:scaleY(1)}}
+
+  /* ================= bandeau de chaîne ================= */
+  .banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    font-size:11px;letter-spacing:2.6px;text-transform:uppercase;margin-bottom:5px}
+  .chip{background:var(--ph);color:var(--ink);text-shadow:none;
+    padding:3px 9px;font-weight:700;letter-spacing:2.2px}
+  .banner .sp{flex:1}
+  .banner em{font-style:normal;color:var(--ph-mid)}
+  .rule{border-top:1px solid var(--ph-line);margin:9px 0 22px}
+
+  /* ================= menu OSD ================= */
+  .menu{display:grid;gap:9px;margin-bottom:14px}
+  .mlab{font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--ph-dim);
+    margin-bottom:2px}
+  .seg{display:flex;flex-wrap:wrap;gap:2px}
+  .seg button{
+    background:none;border:1px solid transparent;color:var(--ph-mid);
+    font-family:inherit;font-size:11.5px;letter-spacing:.7px;text-transform:uppercase;
+    padding:2px 7px;cursor:pointer;text-shadow:inherit;text-align:left}
+  .seg button:hover{color:var(--ph);border-color:var(--ph-line)}
+  .seg button[aria-pressed="true"]{
+    background:var(--ph);color:var(--ink);text-shadow:none;border-color:var(--ph)}
+  .seg button[aria-pressed="true"]::before{content:"\25B8 "}
+  .seg.tight button{padding:2px 6px;min-width:24px;text-align:center}
+  .seg.tight button[aria-pressed="true"]::before{content:""}
+
+  /* ---- distribution d'un exercice de famille ---- */
+  .famnote{font-size:calc(12.5px * var(--fit));color:var(--ph-mid);
+    margin-top:calc(8px * var(--fit));line-height:1.45}
+  ol.dist{list-style:none;margin:0;padding:0;display:grid;gap:calc(4px * var(--fit)) 12px;
+    grid-template-columns:repeat(auto-fill,minmax(172px,1fr))}
+  ol.dist li{display:flex;align-items:baseline;gap:7px;font-size:calc(13px * var(--fit))}
+  ol.dist b{background:var(--ph);color:var(--ink);text-shadow:none;font-size:9.5px;
+    min-width:18px;text-align:center;padding:1px 0;flex:none;font-weight:700}
+
+  /* ================= zone de diffusion ================= */
+  .prog{display:flex;flex-direction:column;min-height:0}
+  .osdline{display:flex;align-items:center;justify-content:space-between;gap:14px;
+    flex-wrap:wrap;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ph-dim);flex:none}
+  .band{border-top:3px double var(--ph-line);border-bottom:3px double var(--ph-line);
+    padding:15px 4px;margin:5px 0;flex:1;min-height:0;overflow:auto;
+    display:flex;flex-direction:column;justify-content:center}
+  /* --fit : facteur d'ajustement automatique, pour que tout tienne sans défilement */
+  .band{--fit:1}
+  .lbl{font-size:calc(9.5px * var(--fit));letter-spacing:2.4px;text-transform:uppercase;
+    color:var(--ph-dim);margin-bottom:calc(8px * var(--fit))}
+  .scene{font-size:calc(clamp(16px,1.15vw + 1.5vh,24px) * var(--fit));
+    line-height:1.42;font-weight:700;letter-spacing:.4px;
+    text-shadow:0 0 1px currentColor,0 0 18px var(--ph-glow),
+                -.7px 0 rgba(255,70,70,.30),.7px 0 rgba(70,190,255,.26)}
+  .cursor{display:inline-block;width:.6em;height:1.05em;background:var(--ph);
+    vertical-align:-.16em;margin-left:.1em;box-shadow:0 0 12px var(--ph-glow);
+    animation:blink 1.06s steps(1) infinite}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+  .meta{margin-top:calc(16px * var(--fit));display:grid;gap:calc(13px * var(--fit))}
+  .intent{font-size:calc(14px * var(--fit));color:var(--ph)}
+  .enjeu{font-size:calc(15px * var(--fit));line-height:1.5;color:var(--ph);
+    border-left:3px solid var(--ph-mid);padding-left:12px}
+  .rendu{font-size:calc(11px * var(--fit));letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--ph-mid)}
+  .rendu b{color:var(--ph);font-weight:700}
+  ul.cons{margin:0;padding:0;list-style:none;display:grid;gap:calc(6px * var(--fit))}
+  ul.cons li{position:relative;padding-left:18px;font-size:calc(13px * var(--fit));
+    line-height:1.5;color:var(--ph)}
+  ul.cons li::before{content:"\25B8";position:absolute;left:0;color:var(--ph-mid)}
+  .fade-in{animation:fadein .45s ease}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .nosignal{text-align:center;color:var(--ph-dim);display:grid;gap:10px}
+  .nosignal b{font-size:15px;letter-spacing:5px;font-weight:700;color:var(--ph-mid)}
+  .nosignal span{font-size:11px;letter-spacing:2px}
+
+  /* ================= commandes ================= */
+  .cmds{display:grid;gap:6px;margin-bottom:8px}
+  #draw{background:var(--ph);color:var(--ink);text-shadow:none;
+    border:1px solid var(--ph);font-family:inherit;font-size:13px;font-weight:700;
+    letter-spacing:3px;text-transform:uppercase;padding:13px 10px;cursor:pointer}
+  #draw:hover{filter:brightness(1.12)}
+  #draw:active{filter:brightness(.85)}
+  .obtn{background:none;border:1px solid var(--ph-line);color:var(--ph-mid);
+    font-family:inherit;font-size:11.5px;letter-spacing:1.8px;text-transform:uppercase;
+    padding:9px 15px;cursor:pointer;text-shadow:inherit}
+  .obtn:hover{color:var(--ph);border-color:var(--ph-mid)}
+  .obtn:disabled{opacity:.3;cursor:default}
+  .obtn:disabled:hover{color:var(--ph-mid);border-color:var(--ph-line)}
+  .hint{font-size:9.5px;line-height:1.6;letter-spacing:.8px;color:var(--ph-dim);margin-bottom:16px}
+  .hint u{text-decoration:none;border:1px solid var(--ph-line);padding:0 4px}
+
+  .tools{display:flex;gap:5px;flex-wrap:wrap}
+  .tools .obtn{font-size:9.5px;letter-spacing:1.2px;padding:5px 9px}
+
+  /* cartouche visible seulement sur la feuille imprimée */
+  .printonly{display:none;margin-top:20px;font-size:11px;line-height:2.6;color:#555}
+
+  /* ================= façade / chrono ================= */
+  /* le chrono vit sur la façade du poste */
+  .chrono{display:flex;align-items:center;gap:12px;flex:none;
+    border-left:1px solid #000;border-right:1px solid #000;padding:0 16px;
+    box-shadow:1px 0 0 rgba(255,255,255,.05) inset,-1px 0 0 rgba(255,255,255,.05)}
+  .clock{font-size:23px;letter-spacing:1.5px;font-variant-numeric:tabular-nums;
+    color:#5c626b;text-shadow:none}
+  .clock.running{color:var(--ph);text-shadow:0 0 1px currentColor,0 0 16px var(--ph-glow)}
+  .clock.over{color:#e0644f;text-shadow:0 0 16px rgba(224,100,79,.5)}
+  .tgroup{display:flex;gap:3px;flex-wrap:wrap}
+  .tgroup button{background:none;border:1px solid #000;color:#8b929c;
+    font-family:inherit;font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;
+    padding:4px 7px;cursor:pointer;text-shadow:none;border-radius:3px;
+    background:linear-gradient(180deg,#2e3136,#1e2024);
+    box-shadow:0 1px 0 rgba(255,255,255,.07) inset}
+  .tgroup button:hover{color:#e2e6ea}
+  .tgroup button[aria-pressed="true"]{color:var(--ph);
+    background:linear-gradient(180deg,#3a3323,#241f14)}
+  .switch{background:none;border:1px solid var(--ph-line);color:var(--ph-mid);
+    font-family:inherit;font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;
+    padding:5px 8px;cursor:pointer;text-shadow:inherit;white-space:nowrap}
+  .switch:hover{color:var(--ph);border-color:var(--ph-mid)}
+  .switch b{color:var(--ph);font-weight:700}
+  .chrono .switch{border-color:#000;color:#a2a9b2;text-shadow:none;border-radius:3px;
+    background:linear-gradient(180deg,#2e3136,#1e2024);
+    box-shadow:0 1px 0 rgba(255,255,255,.07) inset}
+  .chrono .switch:hover{color:#e2e6ea}
+
+  footer{margin-top:12px;display:grid;gap:3px;
+    font-size:9px;letter-spacing:.9px;color:var(--ph-dim);text-transform:uppercase}
+  footer button{background:none;border:none;color:var(--ph-dim);font-family:inherit;
+    font-size:9px;letter-spacing:.9px;text-transform:uppercase;cursor:pointer;
+    text-decoration:underline;padding:0;text-shadow:inherit;justify-self:start}
+  footer button:hover{color:var(--ph-mid)}
+
+  /* écran peu haut : on resserre le menu pour rester en une seule vue */
+  @media (max-height:680px){
+    .wrap{padding:18px 30px 14px}
+    .menu{gap:6px;margin-bottom:10px}
+    .seg button{font-size:11px;padding:1px 6px}
+    .hint{display:none}
+    footer span{display:none}
+    #draw{padding:11px 10px;letter-spacing:2px}
+  }
+
+  /* écran étroit ou bas : on empile, la façade passe sur deux rangs */
+  @media (max-width:900px),(max-height:600px){
+    .wrap{inset:10px 10px 104px;padding:16px 18px 12px;overflow:auto;
+      grid-template-rows:auto auto auto}
+    .stage{grid-template-columns:1fr;gap:18px}
+    .side{order:2;overflow:visible}
+    .prog{order:1}
+    .band{flex:none;height:auto;min-height:180px;overflow:visible}
+    .seg{flex-direction:row;flex-wrap:wrap}
+    .side .sp{display:none}
+    .banner{font-size:9.5px;letter-spacing:1.4px}
+    .fx-frame,.fx-vig,.fx-glare,.fx-flash{inset:10px 10px 104px;border-radius:20px}
+    .fx-top{height:10px}
+    .chin{height:104px;padding:8px 14px;gap:10px;flex-wrap:wrap;align-content:center}
+    .brand{font-size:9px;letter-spacing:2px}
+    .speaker{display:none}
+    .chrono{border:none;box-shadow:none;padding:0;flex-wrap:wrap}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .fx-roll,.fx-grain,.fx-flick,.cursor{animation:none}
+    .fx-grain{opacity:.04}
+    .fade-in{animation:none}
+    body.zap .wrap{transform:none;filter:none}
+  }
+
+  /* ================= impression ================= */
+  @media print{
+    html,body{background:#fff;color:#000}
+    *{text-shadow:none!important}
+    .fx,.chin,.menu,.cmds,.hint,.tools,.panel,footer,#osdBR{display:none!important}
+    .wrap{max-width:none;padding:0;transform:none}
+    .chip{background:none;color:#000;border:1px solid #000;padding:2px 6px}
+    .band{border-color:#000;min-height:0;padding:18px 0}
+    .osdline,.lbl,.nosignal,.nosignal b,.banner em{color:#555}
+    ul.cons li::before{color:#777}
+    .intent,ul.cons li,.scene,.enjeu{color:#000}
+    .enjeu{border-color:#000}
+    .rendu{color:#000}
+    .cursor{display:none}
+    .printonly{display:block}
+  }
+</style>
+</head>
+<body data-phos="ambre">
+
+<div class="wrap">
+
+  <div class="banner">
+    <span class="chip" id="chCh">CH --</span>
+    <span>Générateur de sujets</span>
+    <span class="sp"></span>
+    <em>Sound design &amp; composition</em>
+  </div>
+  <div class="rule"></div>
+
+  <div class="stage">
+
+   <div class="side">
+    <div class="menu">
+      <div>
+        <div class="mlab">Travail</div>
+        <div class="seg" id="segMode">
+          <button data-v="sd" aria-pressed="true">Sound design seul</button>
+          <button data-v="compo" aria-pressed="false">Composition seule</button>
+          <button data-v="mix" aria-pressed="false">Compo + sound design</button>
+        </div>
+      </div>
+      <div>
+        <div class="mlab">Niveau</div>
+        <div class="seg" id="segDiff">
+          <button data-v="0" aria-pressed="true">Au hasard</button>
+          <button data-v="1" aria-pressed="false">1 · Fondamentaux</button>
+          <button data-v="2" aria-pressed="false">2 · Confirmé</button>
+          <button data-v="3" aria-pressed="false">3 · Expert</button>
+        </div>
+      </div>
+      <div>
+        <div class="mlab">En groupe</div>
+        <div class="seg tight" id="segGrp">
+          <button data-v="0" aria-pressed="true">Non</button>
+          <button data-v="2">2</button><button data-v="3">3</button>
+          <button data-v="4">4</button><button data-v="5">5</button>
+          <button data-v="6">6</button><button data-v="7">7</button>
+          <button data-v="8">8</button><button data-v="9">9</button>
+          <button data-v="10">10</button><button data-v="11">11</button>
+          <button data-v="12">12</button>
+        </div>
+      </div>
+      <div>
+        <div class="mlab">Durée</div>
+        <div class="seg" id="segLen">
+          <button data-v="0" aria-pressed="true">Au hasard</button>
+          <button data-v="1" aria-pressed="false">Court · 20-40 s</button>
+          <button data-v="2" aria-pressed="false">Moyen · 1-2 min</button>
+          <button data-v="3" aria-pressed="false">Long · 3 min +</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmds">
+      <button id="draw">Tirer un sujet</button>
+      <button class="obtn" id="daily" title="Le même sujet pour toute la classe, aujourd'hui">Sujet du jour</button>
+    </div>
+      <div class="hint"><u>Espace</u> = nouveau sujet</div>
+
+    <footer>
+      <span>Rendu attendu : WAV 48 kHz / 24 bits</span>
+      <button id="resetSeen">Réinitialiser l'historique</button>
+    </footer>
+   </div>
+
+   <div class="prog">
+    <div class="osdline"><span id="osdTL">Aucun programme</span><span id="osdTR"></span></div>
+    <div class="band" id="band">
+      <div class="nosignal">
+        <b>PAS DE SIGNAL</b>
+        <span>appuyez sur « tirer un sujet »</span>
+      </div>
+    </div>
+    <div class="osdline">
+      <span id="osdBL">Réf ---</span>
+      <div class="tools">
+        <button class="obtn" id="btnIntent" disabled>&#8635; Intention</button>
+        <button class="obtn" id="btnCons" disabled>&#8635; Contraintes</button>
+        <button class="obtn" id="btnCopy" disabled>Copier</button>
+        <button class="obtn" id="btnPrint" disabled>Imprimer</button>
+      </div>
+      <span id="osdBR">45:00</span>
+    </div>
+    <div class="printonly">
+      Rendu attendu : WAV 48 kHz / 24 bits — fichier nommé RÉF_NOM.wav<br>
+      Nom : .................................................. &nbsp;&nbsp;
+      Date : ..............................
+    </div>
+   </div>
+
+  </div>
+</div>
+
+<div class="fx fx-grille"></div>
+<div class="fx fx-scan"></div>
+<div class="fx fx-roll"></div>
+<div class="fx fx-grain"></div>
+<div class="fx fx-vig"></div>
+<div class="fx fx-glare"></div>
+<div class="fx fx-flick"></div>
+<div class="fx fx-frame"></div>
+<div class="fx fx-top"></div>
+<div class="fx fx-flash"></div>
+
+<!-- façade du poste -->
+<div class="chin">
+  <div class="plate">
+    <span class="led"></span>
+    <span class="brand">SONOSCOPE 4200</span>
+  </div>
+  <div class="chrono">
+    <span class="clock" id="clock">45:00</span>
+    <div class="tgroup">
+      <button class="switch" id="tStart">Démarrer</button>
+      <button class="switch" id="tReset">Zéro</button>
+    </div>
+    <div class="tgroup" id="tPresets">
+      <button data-m="15">15</button>
+      <button data-m="30">30</button>
+      <button data-m="45" aria-pressed="true">45</button>
+      <button data-m="60">1 h</button>
+      <button data-m="90">1 h 30</button>
+      <button data-m="180">3 h</button>
+    </div>
+  </div>
+  <div class="speaker"></div>
+  <div class="knobs">
+    <div class="knob">
+      <button id="kPhos" title="Couleur du phosphore"></button>
+      <i>Phosphore</i><b id="kPhosVal">Ambre</b>
+    </div>
+    <div class="knob">
+      <button id="kScan" title="Lignes de balayage"></button>
+      <i>Balayage</i><b id="kScanVal">On</b>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   BANQUE DE SUJETS
+   t = la scène / la commande (ce qu'il se passe)
+   e = ce qui doit s'entendre (l'enjeu : critère de réussite vérifiable à l'écoute)
+   d = niveau (1 fondamentaux, 2 confirmé, 3 expert) — fixe le nombre de contraintes
+   l = durée  (1 court, 2 moyen, 3 long)
+   ========================================================= */
+const SUJETS = {
+
+/* ---------- SOUND DESIGN SEUL ---------- */
+sd:[
+ /* niveau 1 · court */
+ {t:"Une porte en bois grince, se referme, la clé tourne dans la serrure.",
+  e:"On doit entendre que la pièce derrière la porte est petite et vide.",d:1,l:1},
+ {t:"Quelqu'un se sert un café : la tasse, le sucre, la cuillère, une première gorgée trop chaude.",
+  e:"Chaque son porte un geste : on doit deviner la main et son humeur, pas seulement l'objet.",d:1,l:1},
+ {t:"Un briquet s'allume à la troisième tentative.",
+  e:"Les deux échecs ne sonnent pas pareil, et la réussite est reconnaissable sans image.",d:1,l:1},
+ {t:"Des pas approchent dans un couloir carrelé et s'arrêtent net devant une porte.",
+  e:"La distance est lisible à chaque pas : on sait toujours à combien de mètres se trouve la personne.",d:1,l:1},
+ {t:"Une fenêtre s'ouvre sur la rue, reste ouverte quelques secondes, puis se referme.",
+  e:"Le contraste dedans / dehors doit être net : deux espaces, deux couleurs, un seul plan continu.",d:1,l:1},
+ {t:"Un vieux téléviseur s'allume, cherche une chaîne, grésille, s'éteint.",
+  e:"On doit pouvoir dater l'appareil à l'oreille : l'époque s'entend dans la matière du son.",d:1,l:1},
+ {t:"Un sac de courses se déchire, les fruits roulent sur le trottoir.",
+  e:"Chaque fruit a sa propre matière et sa propre trajectoire : on doit pouvoir les compter.",d:1,l:1},
+ {t:"Un ascenseur arrive, les portes s'ouvrent, se referment, il repart.",
+  e:"Il faut entendre que personne n'est monté.",d:1,l:1},
+ {t:"Un robinet goutte dans une salle de bain vide, la nuit. Douze gouttes.",
+  e:"Douze gouttes, douze sons différents (hauteur, surface, distance). Aucune goutte copiée-collée.",d:1,l:1},
+ {t:"Une machine à écrire termine une ligne, sonne, fait retour chariot.",
+  e:"La frappe doit être humaine : irrégulière, hésitante à un endroit, sûre à un autre.",d:1,l:1},
+ {t:"Une valise est bouclée en vitesse avant un départ.",
+  e:"L'urgence vient des gestes (vitesse, ratés, fermeture forcée), jamais du montage ni d'une musique.",d:1,l:1},
+ {t:"Une lettre est décachetée, dépliée, lue, froissée, jetée.",
+  e:"Le papier change d'état à chaque geste : cinq étapes, cinq matières distinctes.",d:1,l:1},
+ {t:"Quelqu'un fouille un tiroir en désordre et trouve enfin ce qu'il cherchait.",
+  e:"Le moment exact où il trouve doit s'entendre, sans voix ni musique.",d:1,l:1},
+ {t:"Quelqu'un retire son casque anti-bruit au milieu d'un chantier.",
+  e:"Deux mondes en un seul plan, sans coupure : le passage filtré → ouvert se fait en un geste continu.",d:1,l:1},
+ {t:"Une bouteille se remplit sous le robinet, déborde, glisse et tombe dans l'évier.",
+  e:"Le niveau d'eau est audible à chaque instant : on entend la bouteille se remplir.",d:1,l:1},
+ {t:"Un réveil sonne dans une pièce où il ne devrait y avoir personne.",
+  e:"La pièce doit quand même sembler habitée : quelque chose de vivant est là, sans que personne n'apparaisse.",d:1,l:1},
+ {t:"Un personnage de cartoon glisse sur une peau de banane et s'écrase.",
+  e:"Le rire est dans le timing : chaque son tombe à l'image près, et le silence avant la chute est calculé.",d:1,l:1},
+ {t:"Un gag en quatre temps : un ressort, une chute, un rebond, un impact.",
+  e:"Chaque temps annonce le suivant : on doit pouvoir anticiper l'impact final sans le voir.",d:1,l:1},
+ {t:"Un ballon de baudruche se gonfle jusqu'à l'explosion.",
+  e:"La tension du caoutchouc monte et se sent avant que ça lâche.",d:1,l:1},
+ {t:"Trois sons d'interface pour une même application : notification, validation, erreur.",
+  e:"Les trois appartiennent à la même famille sonore et restent reconnaissables sans l'écran.",d:1,l:1},
+ {t:"Un déverrouillage biométrique échoue deux fois, puis réussit.",
+  e:"Le troisième essai doit soulager : la réussite s'entend comme une résolution.",d:1,l:1},
+
+ /* niveau 1 · moyen */
+ {t:"Un feu de camp qui prend : l'allumette, la fumée, le petit bois, la braise.",
+  e:"Quatre âges du même feu, enchaînés sans coupure : on entend le feu grandir.",d:1,l:2},
+ {t:"Une averse commence, s'intensifie, puis s'arrête d'un coup.",
+  e:"Le silence d'après est le vrai point fort : l'après-pluie (gouttières, sol mouillé) sonne autrement que l'avant.",d:1,l:2},
+ {t:"Un marché de village à neuf heures du matin.",
+  e:"On doit pouvoir compter les étals sans les voir : chaque étal a sa matière et sa place dans l'espace.",d:1,l:2},
+ {t:"Une cuisine de restaurant pendant le coup de feu, entendue depuis la salle.",
+  e:"Le rythme du service doit s'entendre : commandes, cuisson, assiettes qui partent. Aucun mot compréhensible.",d:1,l:2},
+ {t:"Un garage automobile : une voiture arrive, monte sur le pont, une roue est changée.",
+  e:"Chaque étape est identifiable les yeux fermés, y compris le moment où la voiture décolle du sol.",d:1,l:2},
+
+ /* niveau 1 · long */
+ {t:"Une journée entière dans une cour d'école, du matin au soir.",
+  e:"Le nombre d'enfants varie en permanence sans jamais se compter : la foule reste faite d'individus.",d:1,l:3},
+ {t:"Une cheminée, du premier craquement aux dernières braises.",
+  e:"Aucun craquement ne se répète à l'identique ; l'extinction dure plus longtemps qu'on ne le pense.",d:1,l:3},
+ {t:"Un dimanche de pluie dans un appartement : la matinée, l'après-midi, le soir.",
+  e:"Le temps passe à l'oreille (lumière, activité, pluie) sans aucune coupure ni fondu.",d:1,l:3},
+
+ /* niveau 2 · court */
+ {t:"Quelqu'un s'habille en vitesse : tissus, fermeture éclair, lacets, porte qui claque.",
+  e:"On doit deviner chaque vêtement à sa matière, et l'ordre dans lequel ils sont enfilés.",d:2,l:1},
+ {t:"Un coup de poing au ralenti, puis le même coup à vitesse réelle.",
+  e:"Le même geste, deux physiques sonores : le ralenti n'est pas une version étirée de la version rapide.",d:2,l:1},
+ {t:"Une voiture dérape, évite un obstacle de justesse et cale.",
+  e:"Le poids du véhicule est perceptible dans la dérive, la suspension et le calage.",d:2,l:1},
+ {t:"Une vitre explose et retombe pendant cinq secondes.",
+  e:"La retombée compte plus que l'impact : cinq secondes de débris qui ne tombent pas tous pareil.",d:2,l:1},
+ {t:"Une explosion vue de très loin, puis l'onde de choc qui arrive.",
+  e:"Le décalage lumière / son est crédible : l'arrivée de l'onde est physique, pas spectaculaire.",d:2,l:1},
+ {t:"Un vaisseau spatial passe au-dessus de la caméra et s'éloigne.",
+  e:"Le passage donne sa taille et sa masse : on doit pouvoir dire s'il est plus gros qu'un avion de ligne.",d:2,l:1},
+ {t:"Une porte de sas s'ouvre sur le vide spatial.",
+  e:"Le silence doit faire peur sans être vide : la dépressurisation retire les sons un par un.",d:2,l:1},
+ {t:"Un robot se lève pour la première fois.",
+  e:"On doit entendre que c'est la première fois : hésitations, ratés, ajustements, puis équilibre.",d:2,l:1},
+ {t:"Une créature invisible respire dans la pièce d'à côté.",
+  e:"Sa taille est évidente sans qu'on la voie : le volume d'air déplacé et la résonance du lieu la trahissent.",d:2,l:1},
+ {t:"Une arme à énergie se charge, tire, refroidit.",
+  e:"Les trois temps appartiennent au même objet : une même matière sonore décline trois fonctions.",d:2,l:1},
+ {t:"Le démarrage d'un système futuriste en cinq sons enchaînés.",
+  e:"Une seule famille sonore, cinq fonctions distinctes ; à la fin, le système est « prêt » et ça s'entend.",d:2,l:1},
+ {t:"Le logo sonore d'une marque de voitures électriques. Trois secondes.",
+  e:"Reconnaissable dès la deuxième écoute, sans aucun bruit de moteur thermique.",d:2,l:1},
+ {t:"Un menu de jeu vidéo : survol, sélection, retour, lancement de la partie.",
+  e:"La hiérarchie s'entend : le lancement est le son le plus important, le survol le plus discret.",d:2,l:1},
+ {t:"Un objet du quotidien transformé en monstre.",
+  e:"L'objet d'origine n'est jamais reconnaissable, mais le monstre a un corps cohérent (taille, matière, respiration).",d:2,l:1},
+ {t:"Quelque chose gratte derrière le mur, de plus en plus fort.",
+  e:"Ne jamais révéler ce que c'est ; la progression est continue, sans palier évident.",d:2,l:1},
+ {t:"Un miroir se fissure tout seul.",
+  e:"La fissure se propage dans le temps, pas d'un seul coup : on doit entendre son trajet.",d:2,l:1},
+ {t:"Le monde entendu par quelqu'un qui perd connaissance.",
+  e:"Le point d'écoute se déplace vers l'intérieur du crâne : l'extérieur s'éloigne, le corps se rapproche.",d:2,l:1},
+ {t:"Après une explosion, un acouphène prend toute la place, puis se retire.",
+  e:"Le retour du monde est progressif et dans un ordre logique : les graves d'abord, puis les détails.",d:2,l:1},
+ {t:"Une dispute entendue à travers un mur.",
+  e:"Aucun mot n'est compréhensible, mais on doit savoir qui perd.",d:2,l:1},
+ {t:"Un départ de course de moto, entendu depuis la ligne d'arrivée.",
+  e:"Le peloton arrive et repart en un seul mouvement : un seul objet fait de vingt moteurs.",d:2,l:1},
+ {t:"Un distributeur de billets : carte, code, choix, billets, ticket, carte rendue.",
+  e:"L'ordre des opérations est reconnaissable, et la sortie des billets est le moment le plus satisfaisant.",d:2,l:1},
+
+ /* niveau 2 · moyen */
+ {t:"Un repas préparé au couteau : découpe, huile chaude, poêle, assiette.",
+  e:"La matière découpée change trois fois (légume, viande, herbe) et on doit entendre laquelle.",d:2,l:2},
+ {t:"Un vélo réparé au bord d'une route de campagne.",
+  e:"Le hors-champ (route, champs, météo) vit pendant toute la réparation, sans jamais couvrir les gestes.",d:2,l:2},
+ {t:"Un carton trop lourd monté dans un escalier trop étroit.",
+  e:"L'effort s'entend dans le carton (frottements, chocs, craquements), pas dans la respiration.",d:2,l:2},
+ {t:"Un train entre en gare, s'arrête, repart.",
+  e:"Le quai reste présent quand le train n'est plus là : le lieu existe avant et après.",d:2,l:2},
+ {t:"Une piscine municipale entendue depuis les vestiaires.",
+  e:"Le carrelage colore tout : réverbération, voix, eau, tout porte la même empreinte du lieu.",d:2,l:2},
+ {t:"Un orage lointain se rapproche jusqu'à passer au-dessus.",
+  e:"La distance se mesure au grave : plus l'orage est proche, plus le spectre s'élargit vers le bas.",d:2,l:2},
+ {t:"Quelqu'un descend à la cave et éteint la lumière derrière lui.",
+  e:"L'espace se referme à l'oreille : l'obscurité change la manière dont la pièce sonne.",d:2,l:2},
+ {t:"Une maison vide qui n'est pas vide.",
+  e:"Un seul son trahit la présence, une seule fois. Tout le reste est un lieu vide crédible.",d:2,l:2},
+ {t:"Un lit d'hôpital la nuit, quand les machines s'arrêtent une à une.",
+  e:"La dernière machine devient insupportable par sa solitude, pas par son volume.",d:2,l:2},
+ {t:"Un atelier de menuiserie en pleine activité.",
+  e:"Trois postes de travail distincts, placés à trois endroits différents de l'espace stéréo.",d:2,l:2},
+ {t:"Une salle de classe cinq minutes avant le cours, puis la sonnerie.",
+  e:"Le brouhaha est fait d'individus : on doit pouvoir suivre au moins deux personnes du début à la fin.",d:2,l:2},
+ {t:"Un cabinet dentaire du point de vue du patient.",
+  e:"Les sons de la bouche sont à l'intérieur du crâne, ceux de la pièce à l'extérieur : deux espaces imbriqués.",d:2,l:2},
+ {t:"Un match de basket entendu depuis les vestiaires.",
+  e:"On doit savoir qui marque sans voir le terrain : le public et la structure du bâtiment racontent le score.",d:2,l:2},
+ {t:"Une salle de sport à sept heures du matin.",
+  e:"Le lieu doit sembler trop grand pour le nombre de personnes présentes.",d:2,l:2},
+ {t:"Une plongée : la surface, la descente, le silence des profondeurs.",
+  e:"Le passage sous l'eau se fait en un seul geste continu, sans coupure ni fondu.",d:2,l:2},
+ {t:"Une tempête de neige contre une cabane en bois.",
+  e:"La cabane devient un instrument : chaque planche, chaque vitre répond au vent différemment.",d:2,l:2},
+ {t:"Un vernissage dans une galerie : arrivée, discours, applaudissements, retour du brouhaha.",
+  e:"L'espace (sol dur, plafond haut, vitrine) est identifiable, et le discours n'est pas compréhensible.",d:2,l:2},
+ {t:"Un laboratoire la nuit : machines en veille, ventilation, une seule personne qui travaille.",
+  e:"Le lieu paraît immense et propre ; la personne, minuscule et concentrée.",d:2,l:2},
+
+ /* niveau 2 · long */
+ {t:"Une forêt à l'aube : le passage de la nuit au jour.",
+  e:"Les espèces se relaient, elles ne s'additionnent jamais : jamais plus de trois sources animales à la fois.",d:2,l:3},
+ {t:"Un port de pêche, du retour des bateaux à la fermeture de la criée.",
+  e:"Trois espaces enchaînés (quai, hangar, extérieur) sans coupure ; les moteurs cessent avant que les voix ne dominent.",d:2,l:3},
+ {t:"Une chambre d'hôtel au-dessus d'une avenue, de minuit à six heures.",
+  e:"Le temps passe à l'oreille : la ville s'éteint puis se rallume dans le bon ordre (livreurs, éboueurs, premiers bus).",d:2,l:3},
+
+ /* niveau 3 · court */
+ {t:"Un téléporteur rate son coup.",
+  e:"L'erreur s'entend avant d'être visible : le son annonce le raté avant l'image.",d:3,l:1},
+ {t:"Une interface holographique manipulée à deux mains.",
+  e:"Chaque geste a sa réponse, aucune réponse n'est identique ; les deux mains sont localisables dans l'espace.",d:3,l:1},
+ {t:"Le son de la couleur rouge.",
+  e:"Aucun cliché : ni feu, ni sang, ni sirène. Le rouge doit être reconnu à l'aveugle par la moitié de la classe.",d:3,l:1},
+ {t:"Le son du vertige, au bord d'un toit.",
+  e:"Le corps est dedans (souffle, pouls, équilibre), la ville dehors : les deux ne se mélangent jamais.",d:3,l:1},
+ {t:"Un logo sonore pour une chaîne d'information continue, en trois durées : 1 s, 3 s, 8 s.",
+  e:"Les trois versions sont un même objet ; la version de 1 s reste identifiable seule.",d:3,l:1},
+
+ /* niveau 3 · moyen */
+ {t:"Une poursuite à pied sur les toits.",
+  e:"La hauteur reste audible en permanence : la rue en bas ne disparaît jamais.",d:3,l:2},
+ {t:"Un combat à mains nues dans un parking souterrain.",
+  e:"Les corps et le béton, rien d'autre : pas de musique, pas de whoosh, pas d'impact de bande-annonce.",d:3,l:2},
+ {t:"Un immeuble s'effondre, vu de l'intérieur.",
+  e:"L'effondrement s'annonce bien avant d'arriver : les signes avant-coureurs durent plus longtemps que l'effondrement.",d:3,l:2},
+ {t:"Une intelligence artificielle prend conscience d'elle-même.",
+  e:"Aucune voix, aucun mot : uniquement du traitement de signal. La prise de conscience est un événement précis, datable.",d:3,l:2},
+ {t:"Un moteur à distorsion démarre, monte en régime, décroche.",
+  e:"La montée semble infinie avant de casser (pense au glissando de Shepard) ; le décrochage est net.",d:3,l:2},
+ {t:"Un essaim de drones survole une ville endormie.",
+  e:"Un seul organisme fait de centaines d'unités : ni une nappe, ni des individus, mais un mouvement d'ensemble.",d:3,l:2},
+ {t:"La liaison radio avec une base perdue se dégrade jusqu'au silence.",
+  e:"La dégradation raconte la distance : chaque perte de qualité correspond à un éloignement.",d:3,l:2},
+ {t:"Ce qu'entend une plante qui pousse.",
+  e:"Échelle de temps et de taille à réinventer : rien ne doit sonner à l'échelle humaine.",d:3,l:2},
+ {t:"L'intérieur d'un corps humain traité comme une usine.",
+  e:"L'organique et le mécanique sont le même son : on ne doit pas pouvoir dire lequel est lequel.",d:3,l:2},
+ {t:"Un souvenir qui s'efface.",
+  e:"Il reste reconnaissable jusqu'à la dernière seconde ; l'effacement progresse sans jamais s'arrêter.",d:3,l:2},
+ {t:"Une machine absurde fabrique un œuf dur en douze étapes.",
+  e:"Douze causes, douze effets, aucune coupure : chaque étape déclenche mécaniquement la suivante.",d:3,l:2},
+ {t:"La même pièce entendue par un humain, puis par un chien.",
+  e:"Deux mixages du même matériau : mêmes sources, hiérarchie et spectre différents.",d:3,l:2},
+ {t:"Le point de vue d'un insecte qui traverse une cuisine.",
+  e:"Tout est énorme, rien n'est fort : l'échelle passe par le spectre et l'espace, jamais par le volume.",d:3,l:2},
+ {t:"Un incendie de forêt gagne du terrain.",
+  e:"Le feu traverse l'image d'un bord à l'autre : le mouvement dans le champ stéréo est le sujet.",d:3,l:2},
+ {t:"Une rivière, de la source à la cascade.",
+  e:"Le même élément, cinq comportements distincts, enchaînés sans coupure.",d:3,l:2},
+
+ /* niveau 3 · long */
+ {t:"Une plage, de la marée basse à la marée haute, compressée en trois minutes.",
+  e:"Le temps doit sembler normal : aucune accélération ne s'entend, pourtant tout a changé à la fin.",d:3,l:3},
+ {t:"Le réveil d'une ville, de cinq à huit heures, en un seul plan.",
+  e:"Aucune coupure, aucun fondu : les couches apparaissent une à une, dans un ordre crédible.",d:3,l:3},
+ {t:"Un aéroport, du hall d'embarquement au décollage.",
+  e:"Trois espaces enchaînés (hall, passerelle, cabine) sans aucune musique ; le décollage est vécu de l'intérieur.",d:3,l:3},
+ {t:"Une nuit en camping, du coucher au lever du soleil.",
+  e:"La toile de tente est le seul filtre : tout ce qui vient de dehors passe par elle.",d:3,l:3},
+ {t:"Le métro aux heures de pointe, du quai jusqu'à la rue.",
+  e:"La foule reste composée d'individus, et le trajet (quai, rame, couloirs, sortie) est lisible.",d:3,l:3},
+ {t:"Le lancement d'une fusée, du compte à rebours à la mise en orbite.",
+  e:"Le silence final doit être gagné : après la violence du décollage, le vide arrive progressivement.",d:3,l:3}
+],
+
+/* ---------- COMPOSITION SEULE ---------- */
+compo:[
+ /* niveau 1 · court */
+ {t:"Une berceuse pour un enfant qui ne veut pas dormir.",
+  e:"Le morceau finit par céder : la fin est plus lente et plus simple que le début.",d:1,l:1},
+ {t:"Une musique d'attente téléphonique qu'on aurait plaisir à écouter.",
+  e:"Elle supporte la boucle : le raccord fin → début est indétectable et rien ne lasse à la troisième écoute.",d:1,l:1},
+ {t:"Le jingle d'une radio locale. Cinq secondes.",
+  e:"Chantable dès le premier passage : cinq notes maximum, dans la tessiture d'une voix parlée.",d:1,l:1},
+ {t:"Le générique d'un podcast d'investigation.",
+  e:"Il promet une révélation sans jamais la donner : la tension monte, la résolution n'arrive pas.",d:1,l:1},
+ {t:"Le générique d'un jeu télévisé des années 80.",
+  e:"Assumé jusqu'au mauvais goût, mais techniquement impeccable : les sons datent, pas le mixage.",d:1,l:1},
+ {t:"Un thème de trente secondes joué à l'ouverture d'une application de méditation.",
+  e:"Il doit faire baisser le rythme cardiaque : aucun élément rythmique marqué, une seule ligne mélodique.",d:1,l:1},
+ {t:"Le sting de victoire d'un jeu mobile. Deux secondes.",
+  e:"Reconnaissable entre dix autres, jamais agressif, et il fonctionne sur un haut-parleur de téléphone.",d:1,l:1},
+
+ /* niveau 1 · moyen */
+ {t:"Le thème d'un village de jeu de rôle.",
+  e:"On doit avoir envie d'y rester : la boucle ne fatigue pas après cinq écoutes.",d:1,l:2},
+ {t:"Le menu principal d'un jeu, joué pendant que le joueur hésite.",
+  e:"Il ne doit jamais presser : aucune montée, aucune chute, sans être plat pour autant.",d:1,l:2},
+ {t:"La musique d'un lever de soleil sur une ville.",
+  e:"Une seule montée, aucun retour en arrière : chaque section est plus dense que la précédente.",d:1,l:2},
+ {t:"Le générique d'un dessin animé pour enfants.",
+  e:"Un thème que les enfants doivent pouvoir chanter faux : intervalles simples, refrain répété deux fois.",d:1,l:2},
+ {t:"La musique de retrouvailles sur un quai de gare.",
+  e:"Elle arrive après l'émotion, jamais avant : l'entrée de la musique est en retard sur l'image.",d:1,l:2},
+ {t:"Un morceau pour un voyage en train de nuit.",
+  e:"Le tempo vient du rail, pas d'une boîte à rythmes : la pulsation est irrégulière comme les joints des rails.",d:1,l:2},
+ {t:"Une composition d'après une photographie que tu choisis (à joindre au rendu).",
+  e:"La photo est reconnaissable dans la musique : la classe doit pouvoir la retrouver parmi trois.",d:1,l:2},
+ {t:"Le thème d'une héroïne de huit ans.",
+  e:"Ni mièvre, ni ironique : le thème doit pouvoir la suivre jusqu'à l'âge adulte.",d:1,l:2},
+ {t:"La musique d'un premier jour d'école.",
+  e:"La peur et l'excitation dans le même thème, en même temps, pas l'une après l'autre.",d:1,l:2},
+ {t:"Une fin de soirée, quand tout le monde est parti.",
+  e:"Ce qui reste est plus beau que la fête : le morceau est un après, pas une chute.",d:1,l:2},
+
+ /* niveau 1 · long */
+ {t:"Une musique de fond pour une exposition de photographies.",
+  e:"Elle s'oublie sans jamais être plate : aucun événement saillant, mais une évolution constante.",d:1,l:3},
+ {t:"Un morceau calme pour une séance d'étirements.",
+  e:"Une pulsation lente et régulière, aucune surprise : on doit pouvoir respirer dessus.",d:1,l:3},
+ {t:"La musique d'un documentaire de voyage : trois minutes de paysages sans commentaire.",
+  e:"Le morceau laisse de la place : au moins un tiers de la durée est presque vide.",d:1,l:3},
+
+ /* niveau 2 · court */
+ {t:"Un carrousel de fête foraine à l'abandon.",
+  e:"La mélodie est juste, l'instrument non : c'est le timbre et le tempo qui sont abîmés.",d:2,l:1},
+ {t:"Une publicité pour une banque. Trente secondes.",
+  e:"Un point d'arrivée à la seconde près (le logo tombe à 0:28) et une signature mémorisable.",d:2,l:1},
+ {t:"L'habillage d'un journal télévisé : générique, transition, fin.",
+  e:"Trois pièces d'un même bloc : même matériau thématique, trois durées, trois fonctions.",d:2,l:1},
+ {t:"Une musique d'ascenseur pour un immeuble hanté.",
+  e:"Le confort devient inquiétant sans changer de style : même instrumentation du début à la fin.",d:2,l:1},
+ {t:"Une transition de dix secondes entre deux scènes opposées.",
+  e:"Faire passer d'un monde à l'autre sans rupture : le point de bascule ne doit pas être localisable.",d:2,l:1},
+ {t:"La musique d'un compte à rebours de soixante secondes.",
+  e:"On doit sentir le temps qui reste, sans horloge ni tic-tac.",d:2,l:1},
+ {t:"Une panne d'électricité générale.",
+  e:"La musique tombe avec le courant : la coupure est écrite dans la partition, pas montée après coup.",d:2,l:1},
+ {t:"Un générique de série animée japonaise. Trente secondes.",
+  e:"Refrain immédiat, aucune introduction : le thème principal est là dès la première seconde.",d:2,l:1},
+ {t:"Un thème pour une publicité de parfum.",
+  e:"Vendre sans jamais nommer : aucun cliché de luxe (pas de harpe, pas de nappe de cordes).",d:2,l:1},
+ {t:"Une musique qui doit rester lisible sur un haut-parleur de téléphone.",
+  e:"Le grave ne porte rien : tout l'intérêt est au-dessus de 300 Hz. À vérifier sur un vrai téléphone.",d:2,l:1},
+ {t:"Le moment de doute juste avant une décision.",
+  e:"Se terminer sans avoir décidé : pas de cadence conclusive.",d:2,l:1},
+
+ /* niveau 2 · moyen */
+ {t:"Le générique d'une série policière nordique.",
+  e:"Le froid vient de l'harmonie, pas des sons : aucun effet de vent, de glace ou de nappe.",d:2,l:2},
+ {t:"Le thème d'un personnage qui ment tout le temps.",
+  e:"Le mensonge est dans l'écriture : la mélodie promet une chose, l'harmonie en fait une autre.",d:2,l:2},
+ {t:"Le générique de fin juste après une fin tragique.",
+  e:"Il doit permettre de sortir de la salle : accompagner, pas prolonger la douleur.",d:2,l:2},
+ {t:"Un thème de course-poursuite en voiture.",
+  e:"L'accélération ne passe pas par le tempo : BPM fixe du début à la fin.",d:2,l:2},
+ {t:"Un documentaire animalier, séquence de chasse.",
+  e:"Ne jamais prendre parti pour le chasseur ni pour la proie : la musique reste à distance.",d:2,l:2},
+ {t:"Un rêve qui vire au cauchemar.",
+  e:"Le basculement est impossible à dater : personne ne doit pouvoir dire à quelle seconde ça bascule.",d:2,l:2},
+ {t:"Un repas de famille tendu.",
+  e:"La musique tient la place des mots qu'on ne dit pas : elle est retenue, jamais explosive.",d:2,l:2},
+ {t:"Le morceau que jouerait un groupe amateur dans un garage.",
+  e:"Les défauts sont écrits : faux départs, tempo qui bouge, mais tout est voulu et reproductible.",d:2,l:2},
+ {t:"Un flash-back en noir et blanc.",
+  e:"On entend l'époque, jamais la nostalgie : instrumentation et écriture d'époque, sans filtre « vieux disque ».",d:2,l:2},
+ {t:"Une séquence de montage : entraînement sportif.",
+  e:"Quatre paliers de progression en deux minutes, chacun clairement identifiable.",d:2,l:2},
+ {t:"Deux minutes de film sans un seul dialogue.",
+  e:"La musique porte le récit toute seule : on doit pouvoir raconter l'histoire après écoute.",d:2,l:2},
+ {t:"Une fête vue par quelqu'un qui s'ennuie.",
+  e:"La fête est là, mais pas pour nous : sa musique est lointaine, la nôtre est au premier plan.",d:2,l:2},
+ {t:"Le thème d'une ville qui ne dort jamais.",
+  e:"Une boucle qui ne se referme jamais tout à fait : chaque tour est légèrement différent.",d:2,l:2},
+ {t:"Une composition pour un défilé de mode.",
+  e:"Le pas des mannequins impose tout : tempo entre 100 et 110 BPM, pulsation ininterrompue.",d:2,l:2},
+ {t:"Un thème d'ouverture de festival.",
+  e:"Il tient sur une sono médiocre en plein air : aucun détail essentiel dans l'extrême grave ni l'extrême aigu.",d:2,l:2},
+ {t:"Un vaisseau approche d'une planète inconnue.",
+  e:"L'inconnu est beau avant d'être menaçant : la menace n'arrive qu'après la première minute.",d:2,l:2},
+ {t:"Une bagarre comique.",
+  e:"La musique compte les coups : chaque impact tombe sur un événement musical écrit.",d:2,l:2},
+ {t:"Un braquage qui tourne mal.",
+  e:"Le plan avait un tempo : il se dérègle. La régularité du début sert de référence.",d:2,l:2},
+ {t:"Un thème western dans un décor urbain.",
+  e:"Aucun instrument de western (ni guitare, ni harmonica, ni sifflet) : le western est dans l'écriture.",d:2,l:2},
+ {t:"Le trailer d'un jeu indépendant.",
+  e:"Petite production, grande émotion : trois instruments maximum, et un seul point culminant.",d:2,l:2},
+ {t:"Un orage vu par un enfant qui n'a pas peur.",
+  e:"L'orage devient un jeu : chaque coup de tonnerre est une occasion, pas une menace.",d:2,l:2},
+ {t:"Une salle d'attente entièrement blanche.",
+  e:"Le temps ne passe pas, la musique si : mêmes éléments du début à la fin, mais ils avancent.",d:2,l:2},
+ {t:"Une séquence de rêve éveillé.",
+  e:"Aucune cadence, aucun repère de tonique : l'oreille ne doit jamais pouvoir se poser.",d:2,l:2},
+ {t:"Une composition sur quatre notes seulement.",
+  e:"Tout le reste vient du rythme et du timbre ; les quatre notes sont annoncées dans le rendu.",d:2,l:2},
+ {t:"Une plongée sous-marine.",
+  e:"La pression s'entend dans l'harmonie : plus on descend, plus l'harmonie se resserre.",d:2,l:2},
+
+ /* niveau 2 · long */
+ {t:"Un morceau minimaliste qui n'évolue que par ajouts.",
+  e:"Rien ne disparaît jamais : tout ce qui entre reste jusqu'à la fin.",d:2,l:3},
+ {t:"Une boucle d'exploration de jeu vidéo.",
+  e:"Elle ne fatigue pas au bout de vingt minutes : livrer la boucle et une note expliquant comment elle varie.",d:2,l:3},
+ {t:"La routine d'une journée de travail.",
+  e:"La répétition devient belle, puis pesante : même motif, deux effets successifs sur l'auditeur.",d:2,l:3},
+ {t:"La musique d'un jardin à travers quatre saisons, en une seule pièce.",
+  e:"Un seul thème, quatre climats : le thème reste identifiable dans chaque saison.",d:2,l:3},
+
+ /* niveau 3 · court */
+ {t:"Un logo sonore musical de cinq secondes, décliné en trois versions : radio, télé, téléphone.",
+  e:"Les trois versions sont le même objet, adapté à trois systèmes de diffusion.",d:3,l:1},
+ {t:"Dix secondes pour relier deux tonalités très éloignées (par exemple do majeur → fa dièse majeur).",
+  e:"Sans modulation brutale : l'oreille arrive sans savoir qu'elle a voyagé.",d:3,l:1},
+ {t:"Un thème de générique de trente secondes qui doit aussi fonctionner coupé à quinze et à cinq secondes.",
+  e:"Chaque coupe tombe sur une vraie fin : livrer les trois versions.",d:3,l:1},
+
+ /* niveau 3 · moyen */
+ {t:"La bande-annonce d'un film qui n'existe pas.",
+  e:"Trois paliers d'intensité, un silence avant le dernier ; le titre du film tombe sur un événement musical.",d:3,l:2},
+ {t:"Un thème d'amour sans violon ni piano.",
+  e:"L'émotion vient du mouvement (rythme harmonique, phrasé), pas du timbre.",d:3,l:2},
+ {t:"Une valse qui se détraque progressivement.",
+  e:"Le trois temps résiste le plus longtemps possible : on doit pouvoir dater le moment où il lâche.",d:3,l:2},
+ {t:"Une marche militaire jouée par des instruments cassés.",
+  e:"La marche reste jouable : la pulsation ne lâche jamais, les timbres si.",d:3,l:2},
+ {t:"Le thème d'un robot qui apprend à ressentir.",
+  e:"La grille reste mécanique (tempo, quantification), l'expression change (dynamique, phrasé).",d:3,l:2},
+ {t:"Un thème qui fonctionne en orchestre et en boîte à musique.",
+  e:"Livrer les deux versions ; la boîte à musique se joue d'une seule main.",d:3,l:2},
+ {t:"Une composition construite sur une seule note tenue du début à la fin.",
+  e:"Tout se joue autour d'elle : elle change de sens (fondamentale, tierce, dissonance) sans jamais s'arrêter.",d:3,l:2},
+ {t:"Un morceau bâti sur un rythme à cinq temps.",
+  e:"On ne doit jamais avoir envie de compter : le cinq est naturel, jamais démonstratif.",d:3,l:2},
+ {t:"La sensation de tomber sans fin.",
+  e:"L'illusion tient sans effet de studio évident : pas de glissando de synthé ni de bruit blanc descendant.",d:3,l:2},
+ {t:"Le thème d'un méchant qui n'a jamais l'air méchant.",
+  e:"Le malaise ne vient qu'après coup : à la première écoute, c'est un thème agréable.",d:3,l:2},
+ {t:"Une musique de deuil sans aucun pathos.",
+  e:"La note qui pleure est interdite : pas d'appoggiature, pas de mineur plaintif, pas de ralenti final.",d:3,l:2},
+ {t:"Un morceau construit à partir d'un sample de deux secondes.",
+  e:"Aucune autre source ; livrer le sample d'origine avec le rendu.",d:3,l:2},
+ {t:"Un seul instrument, huit traitements.",
+  e:"On doit l'oublier complètement au moins une fois ; lister les huit traitements dans le rendu.",d:3,l:2},
+ {t:"Une course contre la montre médicale.",
+  e:"Le tempo est celui du cœur du patient : il varie, et la musique le suit sans jamais le doubler.",d:3,l:2},
+ {t:"Un choral pour l'enterrement d'un robot.",
+  e:"Sincère, jamais parodique : les sons électroniques sont traités avec le sérieux d'un chœur.",d:3,l:2},
+ {t:"Un dessin animé muet de quatre-vingt-dix secondes, dont tu écris le découpage.",
+  e:"La musique commente chaque geste : livrer le découpage avec les minutages.",d:3,l:2},
+ {t:"Un morceau qui accélère sans jamais changer de tempo.",
+  e:"L'accélération vient de la densité et des subdivisions, jamais du BPM (vérifiable au métronome).",d:3,l:2},
+ {t:"Un morceau écrit pour être écouté à l'envers.",
+  e:"Les deux sens tiennent : livrer les deux fichiers, endroit et envers.",d:3,l:2},
+ {t:"Émouvoir sans corde ni piano.",
+  e:"L'émotion vient d'un seul geste répété, qui évolue jusqu'à devenir insupportable ou libérateur.",d:3,l:2},
+
+ /* niveau 3 · long */
+ {t:"Un combat de boss en trois phases.",
+  e:"Chaque phase reprend la précédente en la dégradant : même thème, trois états, transitions jouables.",d:3,l:3},
+ {t:"Un thème principal décliné en joie, doute et deuil.",
+  e:"Même mélodie, trois vies : l'auditeur identifie le thème dans les trois versions.",d:3,l:3},
+ {t:"Le final d'un film, du silence au tutti.",
+  e:"Une seule montée, sans jamais redescendre : chaque minute a plus d'énergie que la précédente.",d:3,l:3},
+ {t:"Un lieu abandonné qui reprend vie.",
+  e:"L'instrumentation raconte à elle seule les deux époques : deux palettes, une bascule.",d:3,l:3},
+ {t:"Deux personnages qui ne se rencontrent jamais.",
+  e:"Deux motifs qui se frôlent sans jamais se superposer : ils partagent la tonalité, jamais la mesure.",d:3,l:3},
+ {t:"Une installation sonore pour galerie, en boucle parfaite.",
+  e:"Le raccord est introuvable : le point de bouclage n'est pas identifiable à l'écoute.",d:3,l:3},
+ {t:"Un générique de fin qui reprend tous les thèmes d'un film (trois thèmes à composer).",
+  e:"L'ordre raconte l'histoire à nouveau : livrer les trois thèmes seuls, puis le générique.",d:3,l:3}
+],
+
+/* ---------- COMPOSITION + SOUND DESIGN ---------- */
+mix:[
+ /* niveau 1 · court */
+ {t:"Un homme court pour attraper un train et le rate de peu.",
+  e:"Tout bascule en une seconde : la musique s'arrête à l'instant où les portes se ferment, le quai continue.",d:1,l:1},
+ {t:"Une lampe de bureau est allumée, un cahier ouvert, une première ligne écrite.",
+  e:"Trois gestes, trois sons, et une musique qui ne commence qu'à la première lettre.",d:1,l:1},
+ {t:"Un enfant souffle ses bougies d'anniversaire en une fois.",
+  e:"Le souffle est le seul son réel ; la musique tient la joie avant, le silence tient la surprise après.",d:1,l:1},
+
+ /* niveau 1 · moyen */
+ {t:"Un homme se réveille dans un appartement inconnu.",
+  e:"Le lieu se découvre à l'oreille avant les yeux : le sound design décrit l'espace, la musique n'entre qu'une fois le lieu compris.",d:1,l:2},
+ {t:"Un enfant construit une cabane dans un jardin et s'y endort.",
+  e:"Le dehors disparaît quand il ferme les yeux : la musique prend la place exacte des sons qui s'éteignent.",d:1,l:2},
+ {t:"Un réveil, un petit-déjeuner, un départ : trois plans.",
+  e:"Une seule idée musicale traverse les trois plans ; chaque plan a son espace sonore propre.",d:1,l:2},
+ {t:"Un adolescent écoute de la musique trop fort dans sa chambre. On est dans le couloir.",
+  e:"La musique existe à travers le mur : composée par toi, puis filtrée par le mur de manière crédible.",d:1,l:2},
+ {t:"Une chasse au trésor dans un grenier.",
+  e:"Chaque objet trouvé relance la musique : le sound design déclenche, la musique répond.",d:1,l:2},
+ {t:"Une averse surprend un pique-nique.",
+  e:"La panique reste joyeuse : la pluie est réaliste, la musique refuse le drame.",d:1,l:2},
+ {t:"La première neige tombe sur une ville.",
+  e:"Le son de la ville s'éteint sans jamais se couper ; la musique arrive quand la ville est devenue silencieuse.",d:1,l:2},
+ {t:"Un enfant apprend à faire du vélo. Trois chutes, une réussite.",
+  e:"La musique ne triomphe qu'à la fin ; chaque chute a son propre son, aucune ne fait vraiment mal.",d:1,l:2},
+
+ /* niveau 1 · long */
+ {t:"Une journée à la plage, de l'arrivée au départ.",
+  e:"La marée et la fatigue avancent ensemble : le sound design suit la mer, la musique suit les corps.",d:1,l:3},
+ {t:"Un après-midi de pluie passé à l'intérieur.",
+  e:"L'ennui doit être agréable : la pluie ne change jamais, la musique change tout le temps, très lentement.",d:1,l:3},
+ {t:"Un train de banlieue, du départ en ville à l'arrivée à la campagne.",
+  e:"Le paysage change à l'oreille (tunnels, ponts, champs) ; la musique s'ouvre à mesure que le paysage s'ouvre.",d:1,l:3},
+
+ /* niveau 2 · court */
+ {t:"Une publicité de trente secondes pour une console de jeu.",
+  e:"Le logo tombe sur le dernier temps de la musique ; au moins trois sons de gameplay reconnaissables.",d:2,l:1},
+ {t:"Un joueur d'échecs joue le coup décisif.",
+  e:"Une seule pièce posée, tout se joue là : le son de la pièce est le point culminant, la musique s'arrête avant.",d:2,l:1},
+ {t:"Le compte à rebours d'un lancement qui échoue.",
+  e:"L'échec arrive avant la fin du décompte : la musique le sait avant la voix.",d:2,l:1},
+ {t:"Un vieux téléphone sonne dans une maison abandonnée. Personne ne décroche.",
+  e:"Jusqu'où tenir ? Chaque sonnerie rend la suivante plus difficile à supporter.",d:2,l:1},
+ {t:"Le dernier point d'un match de tennis.",
+  e:"Le public respire avec la balle : silence pendant l'échange, la musique n'entre qu'après le point.",d:2,l:1},
+ {t:"Un feu d'artifice vu depuis une fenêtre fermée, puis ouverte.",
+  e:"La musique est celle de la fête, dehors ; l'ouverture de la fenêtre change tout d'un coup.",d:2,l:1},
+
+ /* niveau 2 · moyen */
+ {t:"Une course-poursuite en voiture sous la pluie.",
+  e:"La pluie gêne l'action, elle ne la décore pas : elle masque, brouille, et la musique doit se battre contre elle.",d:2,l:2},
+ {t:"Un astronaute perd le contact avec sa base.",
+  e:"L'instant exact de la rupture n'est pas évident : la liaison se dégrade, la musique tient plus longtemps qu'elle.",d:2,l:2},
+ {t:"Une gamine découvre dans un champ un objet qui ne devrait pas exister.",
+  e:"La curiosité avant la peur : le premier contact est beau, la peur n'arrive qu'à la fin.",d:2,l:2},
+ {t:"Un mariage interrompu par un imprévu.",
+  e:"La musique de la cérémonie tient trop longtemps : elle continue alors que tout s'est arrêté autour.",d:2,l:2},
+ {t:"Le premier vol d'un dragon.",
+  e:"Le poids de la bête reste perceptible en vol : la musique s'envole, le sound design garde les pieds sur terre.",d:2,l:2},
+ {t:"Un vieil homme rallume un phare abandonné.",
+  e:"La mécanique se réveille avant la mer : la musique n'entre qu'avec la lumière.",d:2,l:2},
+ {t:"Un cambriolage raté vu par une caméra de surveillance.",
+  e:"Tout passe par ce micro-là : bande passante réduite, mono, un seul point d'écoute. La musique aussi.",d:2,l:2},
+ {t:"Une fête foraine, du guichet au sommet du grand huit.",
+  e:"Les attractions défilent dans l'espace stéréo ; leurs musiques se croisent sans jamais se mélanger.",d:2,l:2},
+ {t:"La rencontre entre un humain et une machine.",
+  e:"Chacun sa palette (organique / synthétique), et les deux finissent par se mélanger en une seule.",d:2,l:2},
+ {t:"Un décollage vu par quelqu'un qui a peur de l'avion.",
+  e:"Chaque bruit normal devient une menace : le sound design est réaliste, c'est la musique qui déforme.",d:2,l:2},
+ {t:"Une lettre lue vingt ans après avoir été écrite.",
+  e:"Deux époques dans le même plan : deux espaces sonores, une musique qui n'appartient qu'à l'une des deux.",d:2,l:2},
+ {t:"Un repas où personne ne parle.",
+  e:"Les couverts font tout le dialogue : rythmés, écrits, presque musicaux ; la musique est minimale.",d:2,l:2},
+ {t:"Deux personnes se ratent de peu à un carrefour.",
+  e:"Le spectateur comprend, pas elles : deux motifs musicaux se croisent, aucun des deux personnages n'entend l'autre.",d:2,l:2},
+ {t:"La finale d'un concours de talents.",
+  e:"La salle est un personnage à part entière : elle réagit, respire, juge.",d:2,l:2},
+ {t:"Un robot ménager prend le contrôle de la maison.",
+  e:"Les appareils forment un orchestre : chaque appareil devient un instrument identifiable.",d:2,l:2},
+ {t:"Le dernier jour d'un magasin qui ferme.",
+  e:"Le lieu se vide de ses sons un par un ; la musique ne reste qu'avec ce qui reste.",d:2,l:2},
+ {t:"Un premier rendez-vous qui se passe mal.",
+  e:"Les silences sont le vrai sujet : longs, gênants, et la musique ne les remplit jamais.",d:2,l:2},
+ {t:"Une nuit blanche avant un examen.",
+  e:"La fatigue déforme progressivement le réel : le sound design se dérègle, la musique tourne en rond.",d:2,l:2},
+ {t:"Un livreur en scooter dans les embouteillages.",
+  e:"Le casque filtre tout : la ville est étouffée, la musique dans les écouteurs est nette.",d:2,l:2},
+ {t:"Un phare dans la tempête.",
+  e:"Le bâtiment résiste audiblement : la structure craque, tient ; la musique est celle du phare, pas de la tempête.",d:2,l:2},
+ {t:"Un magicien rate son tour devant une salle comble.",
+  e:"La musique du numéro continue, seule, alors que la salle a compris : le décalage est le sujet.",d:2,l:2},
+ {t:"Une piscine municipale vide, la nuit.",
+  e:"L'eau sans personne dedans : réverbération du lieu, mouvements minuscules de l'eau, musique retenue.",d:2,l:2},
+ {t:"Un train fantôme de fête foraine.",
+  e:"Le toc s'entend, la peur aussi : les effets sont volontairement kitsch, mais un seul son est vraiment inquiétant.",d:2,l:2},
+ {t:"Un ouvrier au sommet d'une grue à l'heure de la pause.",
+  e:"La ville est en bas, très loin ; le vent et le métal sont proches ; la musique est celle de la hauteur.",d:2,l:2},
+ {t:"Le générique d'une série documentaire sur l'océan.",
+  e:"L'échelle est immense dès la première seconde : grave, espace, lenteur.",d:2,l:2},
+ {t:"Un ascenseur reste bloqué entre deux étages.",
+  e:"L'espace se referme minute après minute : le sound design rapetisse, la musique se resserre.",d:2,l:2},
+ {t:"Un feu de camp et une histoire qui fait peur (aucun mot compréhensible).",
+  e:"La forêt réagit au récit : chaque temps fort de l'histoire déclenche une réponse dans la nature.",d:2,l:2},
+ {t:"Un déménagement en pleine canicule.",
+  e:"La chaleur s'entend : cigales, moteurs qui peinent, souffle, et une musique qui traîne.",d:2,l:2},
+ {t:"Un vieux musicien joue une dernière fois dans un couloir de métro.",
+  e:"Le lieu accompagne mieux qu'un arrangement : la réverbération du couloir et les passants sont l'orchestre.",d:2,l:2},
+ {t:"Un mariage dans la neige.",
+  e:"La fête est chaude, le dehors ne l'est pas : deux températures sonores, une porte entre les deux.",d:2,l:2},
+ {t:"Une capsule temporelle ouverte devant une foule.",
+  e:"Ce qui en sort déçoit, puis émeut : le premier objet est banal, le deuxième change tout.",d:2,l:2},
+ {t:"Un chirurgien se prépare avant une opération.",
+  e:"Le rituel est plus tendu que l'opération : gants, lavage, silence ; la musique s'arrête à la première incision.",d:2,l:2},
+ {t:"Un couple range son appartement après une rupture.",
+  e:"Chaque objet rangé enlève un son et une note : à la fin, il ne reste presque rien.",d:2,l:2},
+ {t:"Une chorale d'enfants répète un morceau trop difficile.",
+  e:"La justesse n'arrive qu'une seule fois, à un moment que tu choisis : composer le morceau et ses ratés.",d:2,l:2},
+ {t:"Une répétition de théâtre interrompue par un incident.",
+  e:"Le passage de la fiction au réel est net : la musique de scène s'arrête, l'acoustique de la salle reprend.",d:2,l:2},
+ {t:"Un vide-grenier au petit matin : les stands se montent, les premiers clients arrivent.",
+  e:"Chaque objet manipulé raconte une époque ; la musique est une seule mélodie qui passe d'un stand à l'autre.",d:2,l:2},
+
+ /* niveau 2 · long */
+ {t:"Un chien attend son maître toute une journée.",
+  e:"La lumière change, les bruits de l'immeuble aussi ; la musique suit l'attente, pas l'ennui.",d:2,l:3},
+ {t:"Un village entier se prépare pour une fête.",
+  e:"Le montage suit les préparatifs, la musique les rassemble : elle ne se complète qu'au moment de la fête.",d:2,l:3},
+ {t:"La dernière séance d'un cinéma de quartier.",
+  e:"La salle sonne différemment vide et pleine : la même musique de film, entendue dans les deux états.",d:2,l:3},
+ {t:"Un chat traverse toute la ville pour rentrer chez lui.",
+  e:"Le point d'écoute reste à trente centimètres du sol : rien n'est entendu à hauteur d'homme.",d:2,l:3},
+
+ /* niveau 3 · court */
+ {t:"Un stinger de trente secondes pour une fin d'épisode.",
+  e:"La dernière seconde reste en suspens : aucune résolution, ni musicale, ni sonore.",d:3,l:1},
+ {t:"Un teaser de vingt secondes pour un film à inventer.",
+  e:"Une seule information sonore, et elle doit donner envie de voir le film : titre inclus.",d:3,l:1},
+ {t:"Un logo animé de studio de jeu vidéo. Cinq secondes.",
+  e:"Musique et sound design sont indissociables : on ne doit pas pouvoir dire où l'un s'arrête et où l'autre commence.",d:3,l:1},
+
+ /* niveau 3 · moyen */
+ {t:"Une bande-annonce d'horreur de soixante secondes.",
+  e:"Trois sursauts, dont un seul est mérité : les deux autres sont des fausses pistes que la musique prépare.",d:3,l:2},
+ {t:"Un duel au sommet d'une tour, en plein vent.",
+  e:"Le vent gêne le mixage puis devient un allié : il masque, puis il porte les coups.",d:3,l:2},
+ {t:"L'intro d'un jeu : logo, menu, première scène jouable.",
+  e:"Trois régimes sonores, une seule identité : même matériau, trois usages.",d:3,l:2},
+ {t:"Une manifestation vue depuis un balcon.",
+  e:"La foule est loin, la peur est proche : la musique est celle de la personne au balcon, pas de la rue.",d:3,l:2},
+ {t:"Une panne de courant totale dans un hôpital.",
+  e:"Ce qui s'arrête compte plus que ce qui démarre : lister ce qui disparaît, dans l'ordre.",d:3,l:2},
+ {t:"Une plongée dans une épave.",
+  e:"Le métal raconte le naufrage : chaque résonance est une trace de ce qui s'est passé.",d:3,l:2},
+ {t:"Un orage coupe un concert en plein air.",
+  e:"La sono meurt en direct : la musique (composée par toi) se dégrade physiquement, pas artistiquement.",d:3,l:2},
+ {t:"Une opération vue par le patient endormi.",
+  e:"Le réel arrive par bouffées déformées : chaque bouffée est une porte qui s'ouvre puis se referme.",d:3,l:2},
+ {t:"Une expérience scientifique qui dérape.",
+  e:"Le protocole avait un rythme : il se casse. La régularité du début doit être parfaite pour que la casse s'entende.",d:3,l:2},
+ {t:"Le trailer d'un jeu de survie post-apocalyptique.",
+  e:"Le silence est la ressource la plus rare : compter les secondes de silence, elles sont précieuses.",d:3,l:2},
+ {t:"Un carrousel redémarre après trente ans d'arrêt.",
+  e:"La mécanique se souvient avant la musique : le moteur, les engrenages, puis seulement la mélodie, fausse.",d:3,l:2},
+ {t:"Un satellite tombe du ciel.",
+  e:"Trois milieux traversés (vide, atmosphère, sol) : trois physiques, une musique continue.",d:3,l:2},
+ {t:"Une bibliothèque où les livres parlent après la fermeture.",
+  e:"Aucun mot compréhensible : les voix sont des textures ; la musique est faite de ces voix.",d:3,l:2},
+ {t:"Un match de football, d'abord des tribunes puis du terrain.",
+  e:"Le même instant, deux points d'écoute : la bascule est nette et la musique ne suit qu'un des deux.",d:3,l:2},
+ {t:"Une intelligence artificielle écrit sa dernière ligne de code.",
+  e:"Elle semble soulagée : sans voix, sans mot, la détente est audible dans le traitement et la musique.",d:3,l:2},
+ {t:"Un funambule traverse entre deux immeubles.",
+  e:"Le vide sous lui est audible : la ville en bas, le câble, le souffle ; la musique ne rassure jamais.",d:3,l:2},
+ {t:"Une course de rue interdite, la nuit.",
+  e:"Les moteurs sont des personnages, pas des textures : chaque voiture a une voix reconnaissable.",d:3,l:2},
+ {t:"Une avalanche vue depuis un refuge.",
+  e:"Elle s'annonce, arrive, passe : le refuge tient. Le grave est la mesure de la distance.",d:3,l:2},
+ {t:"Un pêcheur seul en mer attrape quelque chose d'énorme.",
+  e:"Ne jamais montrer la bête : sa taille passe par le bateau, la ligne et l'eau.",d:3,l:2},
+ {t:"Un tramway déraille au ralenti.",
+  e:"Le ralenti n'est pas un effet, c'est une perception : les sons ne sont pas étirés, ils sont entendus autrement.",d:3,l:2},
+ {t:"Le générique d'ouverture d'une série de science-fiction.",
+  e:"Une seule idée sonore, déclinée pendant trente secondes : musique et design partent du même matériau.",d:3,l:2},
+
+ /* niveau 3 · long */
+ {t:"Un braquage en trois temps : l'entrée, la panique, la fuite.",
+  e:"Un motif par temps, tous liés : le troisième motif contient les deux premiers.",d:3,l:3},
+ {t:"Le dernier match d'un boxeur en fin de carrière.",
+  e:"Le corps s'entend plus que la salle : souffle, gants, pieds ; la salle est loin, la musique est intérieure.",d:3,l:3},
+ {t:"Une évasion de prison, du plan à la fuite.",
+  e:"Le silence est l'outil principal : la musique n'entre que quand le silence devient impossible.",d:3,l:3},
+ {t:"Un incendie d'immeuble, du premier crépitement aux secours.",
+  e:"Le feu prend la place de tous les autres sons, un par un ; la musique ne survit pas au feu.",d:3,l:3},
+ {t:"Un naufrage en trois temps.",
+  e:"L'eau change de rôle à chaque temps : décor, menace, tombeau.",d:3,l:3},
+ {t:"Une famille emménage dans une maison qui a une histoire.",
+  e:"La maison répond aux nouveaux habitants : chaque geste des habitants déclenche une réponse du bâtiment.",d:3,l:3},
+ {t:"Une randonnée en montagne qui tourne mal.",
+  e:"L'altitude et la météo font tout le récit : souffle, vent, neige racontent ; la musique ne commente pas.",d:3,l:3},
+ {t:"Une station spatiale se réveille après des années de veille.",
+  e:"Les systèmes redémarrent dans un ordre qui raconte : énergie, air, lumière, puis le reste.",d:3,l:3},
+ {t:"Une usine s'arrête définitivement.",
+  e:"Le dernier arrêt est plus fort que le fonctionnement : le silence final est l'événement.",d:3,l:3},
+ {t:"Un désert traversé à pied, du matin au soir.",
+  e:"Presque rien à entendre : tout est dans la variation. La musique est une seule note qui change de couleur.",d:3,l:3},
+ {t:"Une île volcanique se réveille.",
+  e:"Le sol lui-même devient une source sonore : infra-graves, craquements, puis la musique naît du sol.",d:3,l:3}
+]
+};
+
+/* ---------- CONTRAINTES TECHNIQUES ----------
+   min = niveau minimum à partir duquel la contrainte peut tomber */
+const CONS = {
+common:[
+ {t:"Cinq pistes maximum dans la session, bus et retours compris.",min:1},
+ {t:"Annonce une durée cible dans la fourchette demandée : le rendu la respecte à la seconde près.",min:1},
+ {t:"Aucune voix humaine, même traitée ou méconnaissable.",min:1},
+ {t:"Un seul point culminant, clairement identifiable : on doit pouvoir le dater à la seconde.",min:1},
+ {t:"Au moins un son enregistré par toi aujourd'hui même (le fichier brut est joint au rendu).",min:1},
+ {t:"Temps limité : 45 minutes montre en main. Ce qui n'est pas fait n'est pas rendu.",min:1},
+ {t:"Aucune banque de sons : tout est enregistré ou synthétisé par toi.",min:2},
+ {t:"Un silence numérique total d'au moins deux secondes doit exister quelque part, et il doit être justifié.",min:2},
+ {t:"Rendu en mono : aucune information stéréo.",min:2},
+ {t:"Le résultat reste lisible sur un haut-parleur de téléphone : à vérifier sur un vrai téléphone.",min:2},
+ {t:"Fondus d'entrée et de sortie interdits : ça commence net et ça finit net.",min:2},
+ {t:"Trois plans sonores distincts (premier plan, plan moyen, lointain) sont identifiables à tout moment.",min:2},
+ {t:"Aucun son n'est utilisé deux fois à l'identique : toute réutilisation doit être transformée.",min:2},
+ {t:"Loudness imposée : -16 LUFS intégrés (± 1 LU), crête vraie maximale -1 dBTP.",min:2},
+ {t:"Tout le matériau vient d'un seul et même enregistrement source, joint au rendu.",min:3},
+ {t:"Aucun plugin autre que : volume, égaliseur, et un seul délai.",min:3},
+ {t:"L'ensemble boucle proprement : le raccord fin → début est inaudible.",min:3},
+ {t:"Aucune automation de volume : tout se joue au choix des sons, au montage et aux gains fixes.",min:3},
+ {t:"Livre aussi une seconde version sans l'élément le plus important, pour prouver que c'est lui qui porte la scène.",min:3}
+],
+sd:[
+ {t:"La scène est compréhensible les yeux fermés, sans image ni texte d'accompagnement.",min:1},
+ {t:"Au moins un son produit par ton propre corps (voix exclue).",min:1},
+ {t:"Cent pour cent Foley : tout est joué avec des objets devant un micro, rien n'est synthétisé.",min:2},
+ {t:"Trois sources sonores maximum, transformées autant que tu veux.",min:2},
+ {t:"Interdiction d'utiliser le son réaliste de l'élément principal : il est fabriqué avec autre chose.",min:2},
+ {t:"Au moins une transformation extrême (pitch, time-stretch, granulaire) dont la source reste reconnaissable.",min:2},
+ {t:"Aucun cliché de bande-annonce : pas de whoosh, pas de boom, pas de riser.",min:2},
+ {t:"Une seule couche d'ambiance de fond autorisée.",min:2},
+ {t:"Cent pour cent synthèse : aucun enregistrement du monde réel.",min:3},
+ {t:"Aucune réverbération (ni algorithmique, ni convolution) : la profondeur se fabrique autrement.",min:3},
+ {t:"Un seul objet du quotidien comme unique source de toute la scène ; il est nommé dans le rendu.",min:3},
+ {t:"Le hors-champ raconte autant que ce qu'on voit.",min:3}
+],
+compo:[
+ {t:"Le thème est fredonnable après une seule écoute.",min:1},
+ {t:"Le morceau démarre déjà en mouvement : pas d'introduction.",min:1},
+ {t:"Tempo imposé : 72 BPM.",min:1},
+ {t:"Tempo imposé : 92 BPM.",min:1},
+ {t:"Tempo imposé : 128 BPM.",min:1},
+ {t:"Pas de batterie ni de percussions.",min:2},
+ {t:"Pas de piano, pas de cordes (ni réels, ni échantillonnés).",min:2},
+ {t:"Trois timbres maximum.",min:2},
+ {t:"Aucun preset d'usine : chaque son est construit ou modifié, et tu dois pouvoir le montrer.",min:2},
+ {t:"La musique laisse la place à un dialogue imaginaire au centre : le médium (300 Hz – 3 kHz) reste dégagé.",min:2},
+ {t:"Interdiction des boucles copiées-collées : chaque section évolue.",min:2},
+ {t:"Un seul instrument, décliné uniquement par le traitement.",min:3},
+ {t:"Quatre notes maximum pour tout le morceau ; elles sont annoncées dans le rendu.",min:3},
+ {t:"Une seule modulation, placée au bon endroit.",min:3},
+ {t:"Mesure impaire imposée : 5/4 ou 7/8, au choix.",min:3},
+ {t:"Le morceau fonctionne aussi en version boîte à musique, jouable d'une seule main.",min:3}
+]
+};
+
+/* ---------- INTENTION / REGISTRE ----------
+   tirée séparément de la scène : les associations inattendues sont voulues */
+const INTENTIONS = [
+ "Angoissant, sans jamais utiliser de son violent.",
+ "Comique : le son doit faire sourire tout seul, sans image.",
+ "Onirique, flottant, sans repère de temps.",
+ "Documentaire : aucun effet ne doit s'entendre.",
+ "Publicitaire : efficace, propre, une seule idée qui marque.",
+ "Nostalgique, comme un souvenir d'enfance.",
+ "Mélancolique, mais pas triste.",
+ "Épique, à grande échelle.",
+ "Intime : on est à trente centimètres de l'action.",
+ "Clinique et froid, presque chirurgical.",
+ "Absurde : la logique du son ne colle pas à la scène.",
+ "Tendre, fragile, à la limite de l'audible.",
+ "Menaçant, sans jamais faire sursauter.",
+ "Contemplatif : rien ne presse.",
+ "Urgent : tout va trop vite.",
+ "Solennel, cérémoniel.",
+ "Ironique : l'image dit une chose, le son dit l'inverse.",
+ "Enfantin, coloré, immédiat.",
+ "Sale et organique : rien de propre.",
+ "Hyper-propre et digital : tout est net.",
+ "Poétique, avec un seul geste sonore fort.",
+ "Oppressant : de plus en plus étroit.",
+ "Euphorique, sans être bruyant.",
+ "Résigné : ça s'éteint doucement.",
+ "Mystérieux : on doit vouloir réécouter.",
+ "Héroïque, mais à échelle humaine.",
+ "Grotesque, exagéré, presque de mauvais goût.",
+ "Naturaliste : on doit croire que c'est une prise réelle.",
+ "Rétro années 80, assumé jusqu'au bout.",
+ "Futuriste crédible : rien de magique.",
+ "Tragique retenu : l'émotion sans en rajouter.",
+ "Joyeux mais fatigué.",
+ "Rêche, tendu, au bord de la saturation.",
+ "Aérien : le grave est presque interdit."
+];
+
+/* ---------- EXERCICES DE FAMILLE (travail en groupe) ----------
+   t = le nom de la famille | c = la consigne commune | m = les cartes à distribuer */
+const FAMILLES = [
+ {t:"Les couleurs composées",
+  c:"Une couleur chacun. Écoutées en série, elles doivent former une seule palette.",
+  m:["Rose bonbon","Bleu nuit","Vert pomme","Jaune poussin","Rouge sang","Gris souris",
+     "Blanc cassé","Noir de fumée","Bleu ciel","Vert bouteille","Orange sanguine","Violet cardinal"]},
+ {t:"Les gris",
+  c:"Huit gris, aucun contraste franc : tout se joue dans la nuance.",
+  m:["Gris perle","Gris souris","Gris anthracite","Gris tourterelle","Gris acier","Gris ardoise",
+     "Gris béton","Gris cendre"]},
+ {t:"Les sept merveilles du monde",
+  c:"Un monument chacun. Six ont disparu : à vous de les faire exister.",
+  m:["La grande pyramide de Gizeh","Les jardins suspendus de Babylone","La statue de Zeus",
+     "Le temple d'Artémis","Le mausolée d'Halicarnasse","Le colosse de Rhodes","Le phare d'Alexandrie"]},
+ {t:"Les quatre éléments",
+  c:"Interdiction d'utiliser l'élément lui-même comme source d'enregistrement.",
+  m:["La terre","L'eau","L'air","Le feu"]},
+ {t:"Les saisons",
+  c:"Aucune saison ne doit être reconnaissable à ses animaux : ni cigale, ni oiseau.",
+  m:["Le printemps","L'été","L'automne","L'hiver"]},
+ {t:"Les planètes",
+  c:"Aucun son n'existe dans le vide : chacun invente la loi physique de sa planète.",
+  m:["Mercure","Vénus","La Terre","Mars","Jupiter","Saturne","Uranus","Neptune"]},
+ {t:"Les sept péchés capitaux",
+  c:"Aucune voix, aucun mot. Le péché doit s'entendre dans le comportement du son.",
+  m:["L'orgueil","L'avarice","L'envie","La colère","La luxure","La gourmandise","La paresse"]},
+ {t:"Les âges de la vie",
+  c:"Mis bout à bout, l'ensemble doit raconter une seule vie.",
+  m:["La naissance","Les premiers pas","La première rentrée","L'adolescence","Le premier travail",
+     "Devenir parent","La retraite","La dernière heure"]},
+ {t:"Les heures du jour",
+  c:"Même lieu pour tout le monde : seule l'heure change.",
+  m:["Minuit","Deux heures","Quatre heures","L'aube","Huit heures","Dix heures","Midi",
+     "Quatorze heures","Seize heures","Le crépuscule","Vingt heures","Vingt-deux heures"]},
+ {t:"Les états de l'eau",
+  c:"Une seule matière, dix comportements. Aucun enregistrement d'eau réelle.",
+  m:["La goutte","La pluie","La flaque","Le ruisseau","Le fleuve","La mer","La glace","La vapeur",
+     "La brume","La neige"]},
+ {t:"Les matières",
+  c:"Chacun ne doit utiliser que sa matière, jouée à la main. Pas de synthèse.",
+  m:["Le bois","Le métal","Le verre","Le tissu","La pierre","Le plastique","Le papier","Le cuir",
+     "La céramique","Le caoutchouc","Le sable","La cire"]},
+ {t:"Les cinq saveurs",
+  c:"Traduire un goût sans jamais passer par la bouche ni la cuisine.",
+  m:["Le sucré","Le salé","L'acide","L'amer","L'umami"]},
+ {t:"Les pièces de la maison",
+  c:"Même maison, même famille : on doit entendre que c'est le même logement.",
+  m:["L'entrée","La cuisine","Le salon","La chambre","La salle de bain","Le couloir","La cave",
+     "Le grenier","Le garage","Le jardin"]},
+ {t:"Les familles de l'orchestre",
+  c:"Sans jamais utiliser un seul instrument de la famille en question.",
+  m:["Les cordes","Les bois","Les cuivres","Les percussions","Les claviers"]},
+ {t:"Les transports",
+  c:"Toujours le même trajet, du départ à l'arrivée. Seul le véhicule change.",
+  m:["Le vélo","La trottinette","La voiture","Le bus","Le tramway","Le métro","Le train","Le bateau",
+     "L'avion","L'hélicoptère","Le téléphérique","La montgolfière"]},
+ {t:"Les catastrophes naturelles",
+  c:"Vue depuis un abri, jamais depuis le centre. On subit, on ne contemple pas.",
+  m:["Le séisme","L'éruption","Le tsunami","La tornade","L'inondation","L'incendie","L'avalanche",
+     "La sécheresse"]},
+ {t:"Les phases de la Lune",
+  c:"Huit variations d'un même matériau : chacun part du son du voisin précédent.",
+  m:["La nouvelle lune","Le premier croissant","Le premier quartier","La gibbeuse croissante",
+     "La pleine lune","La gibbeuse décroissante","Le dernier quartier","Le dernier croissant"]},
+ {t:"Les jours de la semaine",
+  c:"Même quartier, même heure : c'est le jour qui doit changer, rien d'autre.",
+  m:["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]},
+ {t:"Les mois de l'année",
+  c:"Un mois chacun. Interdiction des fêtes, des cloches et des feux d'artifice.",
+  m:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre",
+     "Novembre","Décembre"]},
+ {t:"Les signes du zodiaque",
+  c:"Le signe comme caractère, jamais comme animal : pas de bêlement, pas de rugissement.",
+  m:["Bélier","Taureau","Gémeaux","Cancer","Lion","Vierge","Balance","Scorpion","Sagittaire",
+     "Capricorne","Verseau","Poissons"]},
+ {t:"Les huit directions",
+  c:"Même paysage pour tous, écouté dans une direction différente.",
+  m:["Le nord","Le nord-est","L'est","Le sud-est","Le sud","Le sud-ouest","L'ouest","Le nord-ouest"]},
+ {t:"Les cinq sens",
+  c:"Faire entendre un sens qui n'est pas l'ouïe, sans commentaire ni voix.",
+  m:["La vue","L'ouïe","Le toucher","Le goût","L'odorat"]},
+ {t:"Les émotions",
+  c:"Aucune musique, aucune voix : l'émotion doit venir des sons du quotidien.",
+  m:["La joie","La tristesse","La colère","La peur","Le dégoût","La surprise","Le mépris"]},
+ {t:"Les portes",
+  c:"Un seul geste pour tout le monde : ouvrir et fermer. Tout tient dans la différence.",
+  m:["La porte de garage","La porte blindée","La porte de grange","La porte-fenêtre",
+     "La portière de voiture","La porte de cellule","La porte d'ascenseur","La porte battante",
+     "La porte de réfrigérateur","La porte de cabine téléphonique"]},
+ {t:"Les silences",
+  c:"Personne ne rend du vide : chaque silence doit se reconnaître à l'oreille.",
+  m:["Le silence d'une église","Le silence d'une bibliothèque","Le silence après une dispute",
+     "Le silence de la neige","Le silence d'un studio","Le silence du désert",
+     "Le silence avant l'orage","Le silence d'une salle vide"]},
+ {t:"Les foules",
+  c:"Une foule chacun, faite d'individus. Aucune nappe de brouhaha achetée toute faite.",
+  m:["La file d'attente","Le stade","La manifestation","La salle de classe","Le hall de gare",
+     "La plage","La fête foraine","La sortie de cinéma"]},
+ {t:"Les vents",
+  c:"Le vent ne s'entend que par ce qu'il rencontre : à chacun de choisir son obstacle.",
+  m:["La brise","Le zéphyr","Le mistral","La tramontane","Le sirocco","L'alizé","La bourrasque",
+     "L'ouragan"]},
+ {t:"Les épices",
+  c:"Traduire une épice par sa texture et sa chaleur, jamais par la cuisine.",
+  m:["Le poivre","La cannelle","Le safran","Le cumin","Le gingembre","La vanille","Le piment",
+     "La muscade","Le clou de girofle","Le curry"]},
+ {t:"Les contes",
+  c:"Le conte entier en une minute, sans un mot, sans narrateur.",
+  m:["Le Petit Chaperon rouge","Cendrillon","Hansel et Gretel","La Belle au bois dormant",
+     "Le Petit Poucet","Barbe-Bleue","Les Trois Petits Cochons","Boucle d'or","Pinocchio",
+     "La Petite Sirène"]},
+ {t:"Les fables",
+  c:"La morale doit s'entendre à la fin, sans qu'elle soit dite.",
+  m:["Le Corbeau et le Renard","La Cigale et la Fourmi","Le Lièvre et la Tortue","Le Loup et l'Agneau",
+     "Le Rat des villes et le Rat des champs","Le Chêne et le Roseau","Le Renard et les Raisins",
+     "La Poule aux œufs d'or"]},
+ {t:"Les danses",
+  c:"Faire entendre la danse par les corps et le sol, jamais par la musique.",
+  m:["La valse","Le tango","Le rock","La salsa","La techno","Le hip-hop","La country","La java"]},
+ {t:"Les métiers de la rue",
+  c:"Un métier chacun, tous dans la même rue, à la même heure.",
+  m:["Le boulanger","Le marchand de journaux","Le facteur","L'éboueur","Le livreur","Le serveur",
+     "Le coiffeur","Le cordonnier","Le fleuriste","Le pharmacien"]},
+ {t:"Les animaux de la ferme",
+  c:"Interdiction du cri de l'animal : il doit se reconnaître à ses déplacements.",
+  m:["La vache","Le cheval","Le cochon","La poule","Le coq","Le mouton","La chèvre","Le canard",
+     "L'oie","Le chien de berger"]},
+ {t:"Les monuments de Paris",
+  c:"Le monument sans les touristes : c'est le bâtiment qui doit sonner.",
+  m:["La tour Eiffel","Notre-Dame","Le Sacré-Cœur","L'Arc de triomphe","Le Louvre","L'Opéra Garnier",
+     "La Grande Arche","Le Panthéon","La place de la Concorde","Les Catacombes"]}
+];
+
+const DUREES  = {1:"20 à 40 secondes",2:"1 à 2 minutes",3:"3 minutes et plus"};
+const DUREES_C= {1:"20-40 s",2:"1-2 min",3:"3 min +"};
+const NIVEAUX = {1:"Fondamentaux",2:"Confirmé",3:"Expert"};
+const SCENE   = {sd:"La scène",compo:"La commande",mix:"La scène"};
+const RENDU   = "WAV 48 kHz / 24 bits";
+const MODES   = {sd:"Sound design",compo:"Composition",mix:"Compo + sound design"};
+const CHAINE  = {sd:"01",compo:"02",mix:"03"};
+const PREFIX  = {sd:"SD",compo:"CO",mix:"MX"};
+
+/* ========================= état ========================= */
+let mode="sd", diff=0, len=0, grp=0, current=null, rnd=Math.random, typing=null;
+const SEEN_KEY="sds_seen_v1";
+let seen=new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||"[]"));
+
+const $=id=>document.getElementById(id);
+const band=$("band");
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+const pick=a=>a[Math.floor(rnd()*a.length)];
+function pickN(a,n){const c=a.slice(),o=[];while(o.length<n&&c.length)o.push(c.splice(Math.floor(rnd()*c.length),1)[0]);return o}
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const consPool=d=>CONS.common
+  .concat(mode==="sd"?CONS.sd:mode==="compo"?CONS.compo:CONS.sd.concat(CONS.compo))
+  .filter(c=>c.min<=d);
+
+/* ========================= tirage ========================= */
+function candidats(){
+  return SUJETS[mode].map((s,i)=>({...s,i,id:mode+"-"+i}))
+    .filter(s=>(diff===0||s.d===diff)&&(len===0||s.l===len));
+}
+
+function tirer(daily){
+  rnd = daily ? mulberry32(hash(new Date().toISOString().slice(0,10)+"|"+mode+"|"+diff+"|"+len+"|"+grp))
+              : Math.random;
+  if(grp) return tirerFamille(daily);
+  let pool=candidats();
+  if(!pool.length){ rnd=Math.random; return aucun(); }
+
+  if(!daily){
+    const frais=pool.filter(s=>!seen.has(s.id));
+    if(frais.length) pool=frais; else pool.forEach(s=>seen.delete(s.id));
+  }
+  const scene=pick(pool);
+  if(!daily){
+    seen.add(scene.id);
+    localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));
+  }
+  const first=!current;
+  current={scene,intention:pick(INTENTIONS),cons:pickN(consPool(scene.d),scene.d).map(c=>c.t),
+           daily:!!daily,ref:PREFIX[mode]+"-"+String(scene.i+1).padStart(3,"0")};
+  rnd=Math.random;
+  zap(()=>render(true),first);
+}
+
+/* ---- exercice de famille : une carte par participant ---- */
+function tirerFamille(daily){
+  let pool=FAMILLES.map(function(f,i){return {t:f.t,c:f.c,m:f.m,i:i,id:"fam-"+i}})
+                   .filter(function(f){return f.m.length>=grp});
+  if(!pool.length){ rnd=Math.random; return aucun(); }
+
+  if(!daily){
+    var frais=pool.filter(function(f){return !seen.has(f.id)});
+    if(frais.length) pool=frais; else pool.forEach(function(f){seen.delete(f.id)});
+  }
+  var fam=pick(pool);
+  if(!daily){
+    seen.add(fam.id);
+    localStorage.setItem(SEEN_KEY,JSON.stringify([...seen]));
+  }
+  var d = diff || (1+Math.floor(rnd()*3));          /* le niveau fixe le nombre de contraintes */
+  var l = len  || (1+Math.floor(rnd()*3));
+  var first=!current;
+  current={famille:fam, membres:pickN(fam.m,grp), d:d, l:l,
+           intention:pick(INTENTIONS), cons:pickN(consPool(d),d).map(function(c){return c.t}),
+           daily:!!daily, ref:"FA-"+String(fam.i+1).padStart(3,"0")};
+  rnd=Math.random;
+  zap(function(){render(true)},first);
+}
+
+/* changement de chaîne : neige + pincement de l'image */
+function zap(after,powerOn){
+  if(typing){clearTimeout(typing);typing=null}
+  document.body.classList.add("zap");
+  setTimeout(()=>{
+    document.body.classList.remove("zap");
+    if(powerOn){
+      document.body.classList.remove("power"); void document.body.offsetWidth;
+      document.body.classList.add("power");
+    }
+    after();
+  },220);
+}
+
+function aucun(){
+  current=null; document.body.classList.remove("on"); majBoutons();
+  $("chCh").textContent="CH "+CHAINE[mode];
+  $("osdTL").textContent="Hors portée"; $("osdTR").textContent=""; $("osdBL").textContent="Réf ---";
+  band.innerHTML='<div class="nosignal"><b>HORS PORTÉE</b><span>'+
+    (grp?"aucune famille n'a assez de cartes pour "+grp+" participants"
+        :"aucun sujet ne correspond — élargis le niveau ou la durée")+'</span></div>';
+}
+
+function render(anim){
+  const c=current, fam=c.famille;
+  const d=fam?c.d:c.scene.d, l=fam?c.l:c.scene.l;
+  const titre=fam?fam.t:c.scene.t;
+  document.body.classList.add("on");        /* témoin de la façade */
+  $("chCh").textContent=fam?"CH 04":"CH "+CHAINE[mode];
+  $("osdTL").textContent=MODES[mode]+(fam?" · exercice de famille":"");
+  $("osdTR").textContent=(fam?"Groupe de "+c.membres.length+" · ":"")
+                        +"Niv "+d+" · "+NIVEAUX[d]+" · "+DUREES_C[l];
+  $("osdBL").textContent="Réf "+c.ref+(c.daily?" · sujet du jour":"");
+
+  band.innerHTML=`
+    <div>
+      <div class="lbl">${fam?"La famille":SCENE[mode]}</div>
+      <div class="scene" id="sceneTxt"></div>
+      ${fam?`<div class="famnote">${esc(fam.c)}</div>`:""}
+    </div>
+    <div class="meta" id="meta" style="${anim?'opacity:0':''}">
+      ${fam?`<div>
+        <div class="lbl">Distribution — ${c.membres.length} participants, une carte chacun</div>
+        <ol class="dist">${c.membres.map((m,i)=>
+          `<li><b>${i+1}</b><span>${esc(m)}</span></li>`).join("")}</ol>
+      </div>`:""}
+      ${fam?"":`<div>
+        <div class="lbl">Ce qui doit s'entendre</div>
+        <div class="enjeu">${esc(c.scene.e)}</div>
+      </div>`}
+      <div>
+        <div class="lbl">Intention / registre${fam?" — commune à tous":""}</div>
+        <div class="intent">${esc(c.intention)}</div>
+      </div>
+      <div>
+        <div class="lbl">Contrainte${c.cons.length>1?'s':''} technique${c.cons.length>1?'s':''}${fam?" — communes à tous":""}</div>
+        <ul class="cons">${c.cons.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      </div>
+      <div class="rendu">Rendu${fam?" par participant":""} : <b>${DUREES[l]}</b> · ${RENDU} · fichier <b>${c.ref}_NOM.wav</b></div>
+    </div>`;
+  majBoutons();
+
+  const cible=$("sceneTxt"), meta=$("meta");
+  cible.textContent=titre;        /* texte complet en place : on mesure avant d'animer */
+  ajuster();
+
+  if(!anim || matchMedia("(prefers-reduced-motion:reduce)").matches){
+    meta.style.opacity=""; return;
+  }
+  const s={t:titre};
+  /* frappe à l'antenne */
+  const txt=s.t; let i=0;
+  cible.innerHTML='<span id="tw"></span><i class="cursor"></i>';
+  const tw=$("tw");
+  (function step(){
+    tw.textContent=txt.slice(0,++i);
+    if(i<txt.length){ typing=setTimeout(step,11); }
+    else{
+      typing=null;
+      const cur=cible.querySelector(".cursor"); if(cur) cur.remove();
+      meta.style.opacity=""; meta.classList.add("fade-in");
+    }
+  })();
+}
+
+/* réduit la taille du texte juste ce qu'il faut pour que le sujet tienne
+   dans la zone de diffusion — un exercice de famille à 12 est bien plus haut qu'un solo */
+function ajuster(){
+  band.style.setProperty("--fit",1);
+  if(getComputedStyle(band).overflowY!=="auto") return;   /* mode empilé : la page défile */
+  var f=1;
+  while(band.scrollHeight>band.clientHeight+1 && f>0.7){
+    f=Math.round((f-0.05)*100)/100;
+    band.style.setProperty("--fit",f);
+  }
+}
+window.addEventListener("resize",function(){ if(current) ajuster(); });
+
+function majBoutons(){
+  ["btnIntent","btnCons","btnCopy","btnPrint"].forEach(id=>$(id).disabled=!current);
+}
+
+/* ========================= façade ========================= */
+const PHOS=["ambre","vert","blanc"], ANG=[-40,0,40];
+let iPhos=0;
+$("kPhos").onclick=()=>{
+  iPhos=(iPhos+1)%3;
+  document.body.dataset.phos=PHOS[iPhos];
+  $("kPhos").style.transform="rotate("+ANG[iPhos]+"deg)";
+  $("kPhosVal").textContent=PHOS[iPhos][0].toUpperCase()+PHOS[iPhos].slice(1);
+};
+let scan=true;
+$("kScan").onclick=()=>{
+  scan=!scan;
+  document.body.classList.toggle("noscan",!scan);
+  $("kScan").style.transform="rotate("+(scan?-40:40)+"deg)";
+  $("kScanVal").textContent=scan?"On":"Off";
+};
+$("kPhos").style.transform="rotate(-40deg)";
+$("kScan").style.transform="rotate(-40deg)";
+
+$("btnIntent").onclick=()=>{ current.intention=pick(INTENTIONS); render(false); };
+$("btnCons").onclick=()=>{
+  const d=current.famille?current.d:current.scene.d;
+  current.cons=pickN(consPool(d),current.cons.length).map(x=>x.t);
+  render(false);
+};
+$("btnPrint").onclick=()=>window.print();
+$("btnCopy").onclick=()=>{
+  const c=current, fam=c.famille;
+  const d=fam?c.d:c.scene.d, l=fam?c.l:c.scene.l;
+  const txt=
+`SUJET ${c.ref} — ${MODES[mode]}${fam?" · exercice de famille":""} · ${NIVEAUX[d]} · ${DUREES[l]}
+
+${fam?"LA FAMILLE":SCENE[mode].toUpperCase()}
+${fam?fam.t:c.scene.t}
+${fam?"\n"+fam.c+"\n\nDISTRIBUTION ("+c.membres.length+" participants)\n"
+      +c.membres.map((m,i)=>(i+1)+". "+m).join("\n")
+     :"\nCE QUI DOIT S'ENTENDRE\n"+c.scene.e}
+
+INTENTION / REGISTRE${fam?" (commune à tous)":""}
+${c.intention}
+
+CONTRAINTE${c.cons.length>1?"S":""} TECHNIQUE${c.cons.length>1?"S":""}${fam?" (communes à tous)":""}
+${c.cons.map(x=>"- "+x).join("\n")}
+
+RENDU${fam?" (par participant)":""}
+Durée : ${DUREES[l]} — ${RENDU} — fichier nommé ${c.ref}_NOM.wav`;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=$("btnCopy"), o=b.innerHTML;
+    b.innerHTML="Copié"; setTimeout(()=>b.innerHTML=o,1400);
+  });
+};
+
+/* ========================= réglages ========================= */
+function segment(id,cb){
+  const box=$(id);
+  box.addEventListener("click",e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    [...box.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
+    cb(b.dataset.v);
+  });
+}
+segment("segMode",v=>{mode=v; $("chCh").textContent="CH "+CHAINE[mode]});
+segment("segDiff",v=>diff=+v);
+segment("segLen", v=>len=+v);
+segment("segGrp", v=>grp=+v);
+
+$("draw").onclick=()=>tirer(false);
+$("daily").onclick=()=>tirer(true);
+$("resetSeen").onclick=e=>{
+  seen.clear(); localStorage.removeItem(SEEN_KEY);
+  const b=e.currentTarget, o=b.textContent;
+  b.textContent="Historique effacé"; setTimeout(()=>b.textContent=o,1600);
+};
+document.addEventListener("keydown",e=>{
+  if(e.code==="Space"&&!/^(INPUT|TEXTAREA|BUTTON)$/.test(document.activeElement.tagName)){
+    e.preventDefault(); tirer(false);
+  }
+});
+
+/* ========================= chrono ========================= */
+let total=45*60, left=total, tick=null;
+function fmt(s){
+  const neg=s<0; s=Math.abs(s);
+  const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60;
+  return (neg?"-":"")+((h?h+":"+String(m).padStart(2,"0"):String(m).padStart(2,"0"))
+         +":"+String(x).padStart(2,"0"));
+}
+function paint(){
+  const el=$("clock"), t=fmt(left);
+  el.textContent=t;
+  el.className="clock"+(left<0?" over":(tick?" running":""));
+  $("osdBR").textContent=t;
+}
+function start(){
+  if(tick){clearInterval(tick);tick=null;$("tStart").textContent="Reprendre";paint();return}
+  $("tStart").textContent="Pause";
+  tick=setInterval(()=>{left--;if(left===0)bip();paint()},1000);
+  paint();
+}
+function reset(){
+  if(tick){clearInterval(tick);tick=null}
+  left=total; $("tStart").textContent="Démarrer"; paint();
+}
+function bip(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [0,.35,.7].forEach(t=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.type="sine"; o.frequency.value=880;
+      g.gain.setValueAtTime(0,ctx.currentTime+t);
+      g.gain.linearRampToValueAtTime(.25,ctx.currentTime+t+.01);
+      g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+t+.25);
+      o.connect(g).connect(ctx.destination);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+.3);
+    });
+  }catch(e){}
+}
+$("tPresets").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  [...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));
+  total=+b.dataset.m*60; reset();
+});
+$("tStart").onclick=start;
+$("tReset").onclick=reset;
+$("chCh").textContent="CH "+CHAINE[mode];
+paint();
+</script>
+</body>
+</html>
