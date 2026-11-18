@@ -56,9 +56,30 @@ Chaque sujet porte une référence (`SD-042`, `CO-017`, `MX-078`, `FA-012` pour 
 
 Donne le **même tirage à tout le monde** pour une date et des réglages donnés. Il change tout seul le lendemain et ne consomme pas la banque.
 
+### Historique et recherche
+
+Le bouton **Historique** (ou la touche `/`, ou ⌘K / Ctrl+K) ouvre la liste de tout ce qui a été tiré sur ce navigateur, par jour et par heure, avec le prénom, l'intention et les contraintes telles qu'elles étaient cochées. Décocher ou retirer une ligne après le tirage met l'historique à jour.
+
+Tape dans le champ pour retrouver n'importe quoi :
+
+- un **prénom** (« Yanis ») : tous les sujets qu'il a eus, en classe comme en famille ;
+- une **référence** (« SD-042 », ou juste « 042 ») ;
+- un ou plusieurs **mots** de la scène, de l'enjeu, d'une contrainte ou d'une intention (« porte bois », « foley », « mono ») ;
+- une **date** (« hier », « mardi », « 18/11 »).
+
+La recherche ignore accents et majuscules, et un mot tapé doit commencer un mot du texte (« porte » trouve « portes », pas « téléporteur »). Les résultats couvrent l'historique, toute la banque de sujets et de familles, et les contraintes et intentions. Entrée ouvre le premier résultat, les flèches se déplacent dans la liste.
+
+- Un sujet de l'**historique** revient à l'écran exactement comme il était.
+- Un sujet de la **banque** s'affiche avec une intention et des contraintes neuves.
+- Une **contrainte** ou une **intention** ouvre la Banque, filtrée sur ce mot.
+
+La fenêtre **Banque…** a aussi son champ « Filtrer… » pour retrouver une contrainte ou une intention en tapant son nom. **Copier l'historique** donne un tableau (date, référence, prénom, sujet, intention, contraintes) à coller dans un tableur.
+
+Les sujets tirés avant l'arrivée de l'historique y figurent sans date, sous « Avant l'historique ».
+
 ### Pas de répétition
 
-Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le compteur en bas à gauche indique la réserve et combien ont déjà été tirés ; le lien en dessous remet l'historique à zéro.
+Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le compteur en bas à gauche indique la réserve et combien ont déjà été tirés ; « Remettre la réserve à zéro » les fait revenir dans le tirage, sans effacer l'historique.
 
 ### Façade du poste
 
