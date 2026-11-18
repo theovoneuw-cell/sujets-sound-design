@@ -14,17 +14,17 @@ Une seule page HTML, sans installation, sans connexion : elle marche sur Mac, Wi
 
 **En classe, sans rien distribuer** : le générateur est en ligne à l’adresse **<https://theovoneuw-cell.github.io/sujets-sound-design/>** (GitHub Pages, mis à jour automatiquement à chaque push sur `main`). Les étudiants l’ouvrent sur leur propre machine, sans rien télécharger.
 
-Une barre en haut (chrono, banque, clair / sombre, projection), les réglages à gauche, le sujet à droite. Sur téléphone, tout s'empile.
+Toute la page est un téléviseur cathodique : réglages à gauche, sujet diffusé à droite, chrono et réglages d'image sur la façade du bas. Tout tient en une seule vue sur ordinateur ; sur téléphone, tout s'empile.
 
 ## Utiliser
 
 | Réglage | Options |
 |---|---|
-| **Travail** | Sound design · Composition · Les deux |
-| **Niveau** | Hasard · 1 Fondamentaux · 2 Confirmé · 3 Expert (= nombre de contraintes) |
-| **Durée** | Hasard · Court 20-40 s · Moyen 1-2 min · Long 3 min + |
-| **Pour qui** | Un sujet · Famille (une carte par participant, consigne commune) · La classe (un sujet différent par étudiant) |
-| **Dans le sujet** | Intention et contraintes, chacune décochable |
+| **Travail** | Sound design seul · Composition seule · Compo + sound design |
+| **Niveau** | Au hasard · 1 Fondamentaux · 2 Confirmé · 3 Expert (= nombre de contraintes) |
+| **Durée** | Au hasard · Court 20-40 s · Moyen 1-2 min · Long 3 min + |
+| **Pour qui** | Seul · Famille (une carte par participant, consigne commune) · Classe (un sujet différent par étudiant), avec ◂ ▸ pour le nombre |
+| **Dans le sujet** | Intention · Contraintes (à allumer / éteindre) · Banque… |
 
 Puis **Tirer un sujet** (ou la barre d'espace).
 
@@ -42,15 +42,15 @@ Chaque sujet porte une référence (`SD-042`, `CO-017`, `MX-078`, `FA-012` pour 
 
 ### Décocher, retirer, ajouter
 
-- **Dans un sujet tiré** : chaque intention et chaque contrainte a sa case. Décochée, elle est barrée et disparaît du texte copié et de la feuille imprimée. La flèche à droite en tire une autre à la place ; « Tout changer » retire toutes les contraintes ; « + Ajouter une contrainte » en ajoute une compatible.
-- **Dans les réglages** : « Intention / registre » et « Contraintes techniques » s'enlèvent entièrement du sujet.
-- **Banque** (bouton en haut) : liste complète des contraintes et intentions. Une case décochée ne tombe plus au tirage. Le réglage reste dans le navigateur.
+- **Dans un sujet tiré** : chaque intention et chaque contrainte a sa case. Décochée, elle est barrée et disparaît du texte copié et de la feuille imprimée. Le ↻ au bout de la ligne en tire une autre à la place ; « + ajouter » ajoute une contrainte compatible ; sous l'écran, **↻ Intention** et **↻ Contraintes** retirent tout sans changer la scène.
+- **Dans le menu** : « Intention » et « Contraintes » s'éteignent pour les retirer entièrement du sujet.
+- **Banque…** : liste complète des contraintes et intentions. Une case décochée ne tombe plus au tirage. Le réglage reste dans le navigateur.
 
 ### Famille et classe
 
 - **Famille** : un thème commun (les couleurs, la ville à 3 h du matin…), une carte différente par participant. 16 familles ont au moins 13 cartes, le maximum est 16.
-- **La classe** : un sujet différent pour chaque étudiant (jusqu'à 40), sur une grille de cartes. Chaque carte se décoche, se retire (« Autre sujet ») ou s'agrandit pour la projeter ; ← → passent d'un étudiant à l'autre.
-- **Prénoms** : facultatifs, un par ligne. Le nombre de participants suit la liste et chaque fiche porte le prénom. Ils restent dans le navigateur, rien n'est envoyé.
+- **Classe** : un sujet différent pour chaque étudiant (jusqu'à 40), en liste dans l'écran (chaîne 05). Chaque fiche se décoche, se retire (« ↻ Autre sujet ») ou s'agrandit pour la projeter ; ◂ ▸ ou les flèches du clavier passent d'un étudiant à l'autre, Échap revient à la liste.
+- **Prénoms** (lien à côté du nombre) : facultatifs, un par ligne. Le nombre de participants suit la liste et chaque fiche porte le prénom. Ils restent dans le navigateur, rien n'est envoyé.
 
 ### Sujet du jour
 
@@ -58,18 +58,20 @@ Donne le **même tirage à tout le monde** pour une date et des réglages donné
 
 ### Pas de répétition
 
-Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le compteur sous le bouton indique combien ont déjà été tirés ; « Remettre à zéro » vide l'historique.
+Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le compteur en bas à gauche indique la réserve et combien ont déjà été tirés ; le lien en dessous remet l'historique à zéro.
 
-### Barre du haut
+### Façade du poste
 
 | | |
 |---|---|
-| **Chrono** | 5 min à 3 h. Trois bips à la fin, puis il passe en négatif. Le temps s'affiche aussi dans l'onglet. Une contrainte « temps limité » le règle toute seule. |
-| **Banque** | Choisir ce qui peut tomber. |
-| **Clair / sombre** | Suit le système par défaut. |
-| **Projeter** (touche P) | Plein écran, texte agrandi, réglages masqués. Échap pour sortir. |
+| **Chrono** | 15 min à 3 h. Trois bips à la fin, puis il passe en négatif pour montrer le dépassement. Il s'affiche aussi en bas à droite de l'écran. Une contrainte « temps limité » le règle toute seule. |
+| **Phosphore** | Ambre / vert / blanc — retinte toute l'interface. |
+| **Balayage** | Coupe les lignes de balayage si elles gênent la lecture (vidéoprojecteur, écran fatigué). |
+| **Écran** (touche P) | Plein écran, pour le vidéoprojecteur. |
 
-**Copier le texte** met le sujet (ou toute la classe) en texte brut dans le presse-papier. **Imprimer** ne sort que les sujets, noir sur blanc, avec un cartouche nom / date.
+Les réglages de la façade restent en mémoire d'une séance à l'autre.
+
+**Copier** met le sujet (ou toute la classe) en texte brut dans le presse-papier. **Imprimer** ne sort que les sujets, en noir sur blanc, avec un cartouche nom / date.
 
 ## Logo et icône pour le bureau du Mac
 
