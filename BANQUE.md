@@ -4,10 +4,10 @@
 
 ## Sommaire
 
-- 281 sujets : 97 sound design seul, 89 composition seule, 95 composition + sound design
-- 47 contraintes techniques
-- 34 intentions / registres
-- 34 exercices de famille (travail en groupe)
+- 317 sujets : 110 sound design seul, 101 composition seule, 106 composition + sound design
+- 57 contraintes techniques
+- 42 intentions / registres
+- 38 exercices de famille (travail en groupe)
 
 Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit s'entendre** (le critère de réussite, vérifiable à l'écoute). L'intention et les contraintes sont tirées séparément par le générateur.
 
@@ -95,6 +95,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **SD-026** — Un garage automobile : une voiture arrive, monte sur le pont, une roue est changée.  
 *Ce qui doit s'entendre :* Chaque étape est identifiable les yeux fermés, y compris le moment où la voiture décolle du sol.
 
+**SD-101** — Un vélo sort du garage, roule sur des graviers, puis sur une route lisse.  
+*Ce qui doit s'entendre :* Les changements de surface s'entendent dans la chaîne, les pneus et le cadre, pas seulement au sol.
+
+**SD-102** — Une machine à laver termine son cycle : essorage, arrêt, bip, hublot qui s'ouvre.  
+*Ce qui doit s'entendre :* L'essorage fait vibrer la pièce entière : on sent le poids de l'appareil sur le sol.
+
 ### Niveau 1 · Fondamentaux (1 contrainte) — Long · 3 min et plus
 
 **SD-027** — Une journée entière dans une cour d'école, du matin au soir.  
@@ -105,6 +111,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **SD-029** — Un dimanche de pluie dans un appartement : la matinée, l'après-midi, le soir.  
 *Ce qui doit s'entendre :* Le temps passe à l'oreille (lumière, activité, pluie) sans aucune coupure ni fondu.
+
+**SD-098** — Une journée entière dans une cuisine, de l'aube au dernier verre rangé.  
+*Ce qui doit s'entendre :* On doit pouvoir dire l'heure à chaque moment : la lumière ne se voit pas, elle s'entend dans les activités.
+
+**SD-099** — Un trajet à pied de chez soi jusqu'à la boulangerie, porte d'entrée comprise.  
+*Ce qui doit s'entendre :* Chaque espace traversé (escalier, hall, rue, boutique) a son acoustique propre, et on passe de l'un à l'autre sans coupure.
+
+**SD-100** — Une salle de classe avant, pendant et après la sonnerie de la récréation.  
+*Ce qui doit s'entendre :* Les trois moments se distinguent sans aucune parole compréhensible : c'est le mouvement des corps qui raconte.
 
 ### Niveau 2 · Confirmé (2 contraintes) — Court · 20 à 40 s
 
@@ -238,6 +253,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **SD-071** — Une chambre d'hôtel au-dessus d'une avenue, de minuit à six heures.  
 *Ce qui doit s'entendre :* Le temps passe à l'oreille : la ville s'éteint puis se rallume dans le bon ordre (livreurs, éboueurs, premiers bus).
 
+**SD-103** — Une tempête de nuit vécue depuis un phare, du premier coup de vent au calme du matin.  
+*Ce qui doit s'entendre :* On reste à l'intérieur du phare du début à la fin, et pourtant on sent la mer frapper.
+
+**SD-104** — Une fête d'anniversaire entendue depuis la chambre d'à côté, porte fermée, puis ouverte.  
+*Ce qui doit s'entendre :* La porte est le seul vrai montage : fermée, tout est sourd ; ouverte, tout redevient précis d'un coup.
+
+**SD-105** — Un cargo quitte le port, traverse une mer agitée et accoste le lendemain.  
+*Ce qui doit s'entendre :* Le temps passe sans coupure franche : la nuit, la houle et l'arrivée s'enchaînent comme une ellipse.
+
 ### Niveau 3 · Expert (3 contraintes) — Court · 20 à 40 s
 
 **SD-072** — Un téléporteur rate son coup.  
@@ -254,6 +278,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **SD-076** — Un logo sonore pour une chaîne d'information continue, en trois durées : 1 s, 3 s, 8 s.  
 *Ce qui doit s'entendre :* Les trois versions sont un même objet ; la version de 1 s reste identifiable seule.
+
+**SD-106** — Un vieux disque dur rend l'âme.  
+*Ce qui doit s'entendre :* On doit sentir que quelque chose de vivant meurt, alors qu'il ne s'agit que de mécanique.
+
+**SD-107** — Une goutte d'encre tombe dans un verre d'eau et se déploie.  
+*Ce qui doit s'entendre :* Le son décrit une forme qui s'ouvre lentement, sans un seul bruit d'eau réaliste.
+
+**SD-108** — Un insecte se pose sur un micro, puis repart.  
+*Ce qui doit s'entendre :* L'échelle est inversée : l'insecte sonne énorme, et on comprend quand même que c'est un insecte.
 
 ### Niveau 3 · Expert (3 contraintes) — Moyen · 1 à 2 min
 
@@ -322,6 +355,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **SD-097** — Le lancement d'une fusée, du compte à rebours à la mise en orbite.  
 *Ce qui doit s'entendre :* Le silence final doit être gagné : après la violence du décollage, le vide arrive progressivement.
 
+**SD-109** — Une ville se réveille alors que l'électricité est coupée depuis trois jours.  
+*Ce qui doit s'entendre :* L'absence des machines s'entend : chaque son humain prend la place d'un son électrique disparu.
+
+**SD-110** — Un plan-séquence dans un hôpital, de l'entrée des urgences jusqu'au toit.  
+*Ce qui doit s'entendre :* Chaque étage a sa pression et sa tension ; le toit libère tout ce qui a été retenu avant.
+
 ## Composition seule
 
 ### Niveau 1 · Fondamentaux (1 contrainte) — Court · 20 à 40 s
@@ -346,6 +385,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **CO-007** — Le sting de victoire d'un jeu mobile. Deux secondes.  
 *Ce qui doit s'entendre :* Reconnaissable entre dix autres, jamais agressif, et il fonctionne sur un haut-parleur de téléphone.
+
+**CO-090** — La sonnerie de réveil d'un téléphone qu'on n'aurait pas envie de couper.  
+*Ce qui doit s'entendre :* Elle réveille sans agresser : l'énergie monte en quinze secondes et la première seconde reste douce.
+
+**CO-091** — Le thème d'ouverture d'une émission de cuisine du dimanche midi.  
+*Ce qui doit s'entendre :* On sent la table familiale et l'appétit en dix secondes, sans cliché d'accordéon.
+
+**CO-092** — La ritournelle d'un camion de glaces, version 2026.  
+*Ce qui doit s'entendre :* Reconnaissable de loin, à travers une rue : la mélodie survit à un haut-parleur médiocre et à la distance.
 
 ### Niveau 1 · Fondamentaux (1 contrainte) — Moyen · 1 à 2 min
 
@@ -389,6 +437,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **CO-020** — La musique d'un documentaire de voyage : trois minutes de paysages sans commentaire.  
 *Ce qui doit s'entendre :* Le morceau laisse de la place : au moins un tiers de la durée est presque vide.
+
+**CO-093** — La bande-son d'une promenade en forêt, de l'orée jusqu'à la clairière.  
+*Ce qui doit s'entendre :* La musique avance au pas : le tempo ne bouge pas, c'est la densité qui monte puis s'ouvre à la clairière.
+
+**CO-094** — Trois minutes de musique de fond pour un salon de coiffure, un samedi matin.  
+*Ce qui doit s'entendre :* On ne la remarque jamais, mais le salon sans elle semblerait vide : elle tient la durée sans un seul sommet.
 
 ### Niveau 2 · Confirmé (2 contraintes) — Court · 20 à 40 s
 
@@ -516,6 +570,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **CO-060** — La musique d'un jardin à travers quatre saisons, en une seule pièce.  
 *Ce qui doit s'entendre :* Un seul thème, quatre climats : le thème reste identifiable dans chaque saison.
 
+**CO-095** — La musique d'une course de voile, du départ à la ligne d'arrivée.  
+*Ce qui doit s'entendre :* Le vent tourne à mi-course : la musique change de direction sans changer de tempo.
+
+**CO-096** — Une valse pour un bal de mariage qui dégénère gentiment.  
+*Ce qui doit s'entendre :* Le trois-temps reste lisible jusqu'au bout, même quand l'orchestre déraille.
+
+**CO-097** — La musique d'un niveau de jeu sous-marin, du rivage aux abysses.  
+*Ce qui doit s'entendre :* La profondeur s'entend : le registre descend, l'espace s'élargit, les aigus disparaissent peu à peu.
+
 ### Niveau 3 · Expert (3 contraintes) — Court · 20 à 40 s
 
 **CO-061** — Un logo sonore musical de cinq secondes, décliné en trois versions : radio, télé, téléphone.  
@@ -526,6 +589,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **CO-063** — Un thème de générique de trente secondes qui doit aussi fonctionner coupé à quinze et à cinq secondes.  
 *Ce qui doit s'entendre :* Chaque coupe tombe sur une vraie fin : livrer les trois versions.
+
+**CO-098** — Un leitmotiv de cinq secondes pour un personnage qui ment tout le temps.  
+*Ce qui doit s'entendre :* La mélodie semble fausse sans l'être : une note trompe l'oreille et l'harmonie reste juste.
+
+**CO-099** — Le son de démarrage d'un système d'exploitation imaginaire.  
+*Ce qui doit s'entendre :* En trois secondes on entend la marque : un caractère, une matière, une promesse.
+
+**CO-100** — Une transition de huit secondes entre une scène de rire et une scène de deuil.  
+*Ce qui doit s'entendre :* Le basculement tient en un accord pivot, identifiable à la note près.
 
 ### Niveau 3 · Expert (3 contraintes) — Moyen · 1 à 2 min
 
@@ -609,6 +681,9 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **CO-089** — Un générique de fin qui reprend tous les thèmes d'un film (trois thèmes à composer).  
 *Ce qui doit s'entendre :* L'ordre raconte l'histoire à nouveau : livrer les trois thèmes seuls, puis le générique.
 
+**CO-101** — Une pièce pour une installation où le public entre et sort quand il veut.  
+*Ce qui doit s'entendre :* Ni début ni fin audibles : n'importe quelle minute se suffit à elle-même.
+
 ## Composition + sound design
 
 ### Niveau 1 · Fondamentaux (1 contrainte) — Court · 20 à 40 s
@@ -621,6 +696,15 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **MX-003** — Un enfant souffle ses bougies d'anniversaire en une fois.  
 *Ce qui doit s'entendre :* Le souffle est le seul son réel ; la musique tient la joie avant, le silence tient la surprise après.
+
+**MX-096** — Un téléphone vibre sur une table en bois, au milieu d'un repas silencieux.  
+*Ce qui doit s'entendre :* La vibration prend toute la place : la musique n'existe que pour souligner le malaise qu'elle provoque.
+
+**MX-097** — Un chat saute sur un piano resté ouvert.  
+*Ce qui doit s'entendre :* Les notes jouées par le chat deviennent le début de la musique : le hasard se transforme en thème.
+
+**MX-098** — Une pièce de monnaie tourne sur une table avant de tomber.  
+*Ce qui doit s'entendre :* La musique suit la rotation et s'arrête pile à la chute : on doit pouvoir dire pile ou face.
 
 ### Niveau 1 · Fondamentaux (1 contrainte) — Moyen · 1 à 2 min
 
@@ -659,6 +743,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **MX-014** — Un train de banlieue, du départ en ville à l'arrivée à la campagne.  
 *Ce qui doit s'entendre :* Le paysage change à l'oreille (tunnels, ponts, champs) ; la musique s'ouvre à mesure que le paysage s'ouvre.
 
+**MX-099** — Un dimanche à la plage, de l'arrivée sur le sable au départ en fin d'après-midi.  
+*Ce qui doit s'entendre :* La musique suit la marée de monde, pleine à midi et clairsemée le soir ; le sound design tient la plage du début à la fin.
+
+**MX-100** — Un marché de Noël traversé par quelqu'un qui cherche un cadeau.  
+*Ce qui doit s'entendre :* La musique ne vient jamais du marché : elle est dans la tête du personnage et s'éclaire quand il trouve.
+
 ### Niveau 2 · Confirmé (2 contraintes) — Court · 20 à 40 s
 
 **MX-015** — Une publicité de trente secondes pour une console de jeu.  
@@ -678,6 +768,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **MX-020** — Un feu d'artifice vu depuis une fenêtre fermée, puis ouverte.  
 *Ce qui doit s'entendre :* La musique est celle de la fête, dehors ; l'ouverture de la fenêtre change tout d'un coup.
+
+**MX-101** — Un plongeon depuis un plongeoir de dix mètres.  
+*Ce qui doit s'entendre :* L'entrée dans l'eau coupe tout : la musique de l'air ne survit pas sous l'eau, une autre prend le relais.
+
+**MX-102** — Une boîte à musique remontée par un enfant, qui ralentit jusqu'à l'arrêt.  
+*Ce qui doit s'entendre :* La boîte et la musique ne font qu'un : le ralentissement reste mécanique et crédible jusqu'au dernier son.
 
 ### Niveau 2 · Confirmé (2 contraintes) — Moyen · 1 à 2 min
 
@@ -803,6 +899,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 **MX-060** — Un chat traverse toute la ville pour rentrer chez lui.  
 *Ce qui doit s'entendre :* Le point d'écoute reste à trente centimètres du sol : rien n'est entendu à hauteur d'homme.
 
+**MX-103** — Une nuit de garde dans un refuge de montagne pendant une tempête de neige.  
+*Ce qui doit s'entendre :* La musique tient la chaleur du dedans, le sound design le froid du dehors : jamais l'un ne mange l'autre.
+
+**MX-104** — Une course-poursuite à vélo dans une ville en fête.  
+*Ce qui doit s'entendre :* La musique de la fête et celle du film se battent : on sait toujours laquelle est dans la scène.
+
 ### Niveau 3 · Expert (3 contraintes) — Court · 20 à 40 s
 
 **MX-061** — Un stinger de trente secondes pour une fin d'épisode.  
@@ -813,6 +915,12 @@ Chaque sujet se lit ainsi : **la scène** (ce qu'il se passe) puis **ce qui doit
 
 **MX-063** — Un logo animé de studio de jeu vidéo. Cinq secondes.  
 *Ce qui doit s'entendre :* Musique et sound design sont indissociables : on ne doit pas pouvoir dire où l'un s'arrête et où l'autre commence.
+
+**MX-105** — Une bulle de savon éclate, vue au ralenti.  
+*Ce qui doit s'entendre :* Trente secondes pour une demi-seconde réelle : le temps s'étire sans que l'éclat final perde sa force.
+
+**MX-106** — Un verre se brise et le son du verre devient la musique.  
+*Ce qui doit s'entendre :* Le passage du bruit au musical est continu : impossible de dire où finit l'un et où commence l'autre.
 
 ### Niveau 3 · Expert (3 contraintes) — Moyen · 1 à 2 min
 
@@ -939,6 +1047,11 @@ Le chiffre entre parenthèses est le niveau à partir duquel la contrainte peut 
 - L'ensemble boucle proprement : le raccord fin → début est inaudible. *(niv. 3+)*
 - Aucune automation de volume : tout se joue au choix des sons, au montage et aux gains fixes. *(niv. 3+)*
 - Livre aussi une seconde version sans l'élément le plus important, pour prouver que c'est lui qui porte la scène. *(niv. 3+)*
+- Le premier son entendu revient à la fin, transformé. *(niv. 1+)*
+- Joins une fiche de trois lignes : ton intention, ton choix principal, ce que tu referais autrement. *(niv. 1+)*
+- Un seul élément au premier plan à tout moment : jamais deux sons d'égale importance en même temps. *(niv. 2+)*
+- Dynamique large : au moins 15 dB d'écart entre le passage le plus calme et le plus fort. *(niv. 2+)*
+- Filtre passe-bas à 8 kHz sur le master, sans exception : la brillance se fabrique autrement. *(niv. 3+)*
 
 ### Sound design
 
@@ -954,6 +1067,8 @@ Le chiffre entre parenthèses est le niveau à partir duquel la contrainte peut 
 - Aucune réverbération (ni algorithmique, ni convolution) : la profondeur se fabrique autrement. *(niv. 3+)*
 - Un seul objet du quotidien comme unique source de toute la scène ; il est nommé dans le rendu. *(niv. 3+)*
 - Le hors-champ raconte autant que ce qu'on voit. *(niv. 3+)*
+- Chaque son principal est fait d'au moins deux couches, que tu peux isoler sur demande. *(niv. 2+)*
+- Un seul son est au centre, en mono : tout le reste est large. *(niv. 3+)*
 
 ### Composition
 
@@ -973,6 +1088,9 @@ Le chiffre entre parenthèses est le niveau à partir duquel la contrainte peut 
 - Une seule modulation, placée au bon endroit. *(niv. 3+)*
 - Mesure impaire imposée : 5/4 ou 7/8, au choix. *(niv. 3+)*
 - Le morceau fonctionne aussi en version boîte à musique, jouable d'une seule main. *(niv. 3+)*
+- Tonalité imposée : ré mineur. *(niv. 1+)*
+- Tonalité imposée : mi bémol majeur. *(niv. 1+)*
+- Une seule grille de quatre accords pour tout le morceau : la variété vient de l'arrangement. *(niv. 2+)*
 
 ## Intentions / registres
 
@@ -1010,16 +1128,24 @@ Le chiffre entre parenthèses est le niveau à partir duquel la contrainte peut 
 - Joyeux mais fatigué.
 - Rêche, tendu, au bord de la saturation.
 - Aérien : le grave est presque interdit.
+- Cinématographique, mais sans orchestre.
+- Inquiétant à force d'être calme.
+- Chaleureux, comme une pièce habitée.
+- Distant : tout est vu de loin, rien ne s'approche.
+- Mécanique : régulier, implacable.
+- Joueur : le son taquine celui qui écoute.
+- Fiévreux, instable, jamais au repos.
+- Pudique : l'essentiel reste caché.
 
 ## Exercices de famille (travail en groupe)
 
 Une carte par participant, consigne commune. Le nombre de cartes fixe la taille maximale du groupe.
 
-### FA-001 — Les couleurs composées (12 cartes)
+### FA-001 — Les couleurs composées (16 cartes)
 
 Une couleur chacun. Écoutées en série, elles doivent former une seule palette.
 
-`Rose bonbon` · `Bleu nuit` · `Vert pomme` · `Jaune poussin` · `Rouge sang` · `Gris souris` · `Blanc cassé` · `Noir de fumée` · `Bleu ciel` · `Vert bouteille` · `Orange sanguine` · `Violet cardinal`
+`Rose bonbon` · `Bleu nuit` · `Vert pomme` · `Jaune poussin` · `Rouge sang` · `Gris souris` · `Blanc cassé` · `Noir de fumée` · `Bleu ciel` · `Vert bouteille` · `Orange sanguine` · `Violet cardinal` · `Jaune moutarde` · `Rose poudré` · `Bleu canard` · `Vert d'eau`
 
 ### FA-002 — Les gris (8 cartes)
 
@@ -1063,23 +1189,23 @@ Mis bout à bout, l'ensemble doit raconter une seule vie.
 
 `La naissance` · `Les premiers pas` · `La première rentrée` · `L'adolescence` · `Le premier travail` · `Devenir parent` · `La retraite` · `La dernière heure`
 
-### FA-009 — Les heures du jour (12 cartes)
+### FA-009 — Les heures du jour (13 cartes)
 
 Même lieu pour tout le monde : seule l'heure change.
 
-`Minuit` · `Deux heures` · `Quatre heures` · `L'aube` · `Huit heures` · `Dix heures` · `Midi` · `Quatorze heures` · `Seize heures` · `Le crépuscule` · `Vingt heures` · `Vingt-deux heures`
+`Minuit` · `Deux heures` · `Quatre heures` · `L'aube` · `Huit heures` · `Dix heures` · `Midi` · `Quatorze heures` · `Seize heures` · `Dix-huit heures` · `Le crépuscule` · `Vingt heures` · `Vingt-deux heures`
 
-### FA-010 — Les états de l'eau (10 cartes)
+### FA-010 — Les états de l'eau (13 cartes)
 
 Une seule matière, dix comportements. Aucun enregistrement d'eau réelle.
 
-`La goutte` · `La pluie` · `La flaque` · `Le ruisseau` · `Le fleuve` · `La mer` · `La glace` · `La vapeur` · `La brume` · `La neige`
+`La goutte` · `La pluie` · `La flaque` · `Le ruisseau` · `Le fleuve` · `La mer` · `La glace` · `La vapeur` · `La brume` · `La neige` · `La source` · `La cascade` · `La grêle`
 
-### FA-011 — Les matières (12 cartes)
+### FA-011 — Les matières (16 cartes)
 
 Chacun ne doit utiliser que sa matière, jouée à la main. Pas de synthèse.
 
-`Le bois` · `Le métal` · `Le verre` · `Le tissu` · `La pierre` · `Le plastique` · `Le papier` · `Le cuir` · `La céramique` · `Le caoutchouc` · `Le sable` · `La cire`
+`Le bois` · `Le métal` · `Le verre` · `Le tissu` · `La pierre` · `Le plastique` · `Le papier` · `Le cuir` · `La céramique` · `Le caoutchouc` · `Le sable` · `La cire` · `Le carton` · `L'argile` · `La paille` · `Le liège`
 
 ### FA-012 — Les cinq saveurs (5 cartes)
 
@@ -1087,11 +1213,11 @@ Traduire un goût sans jamais passer par la bouche ni la cuisine.
 
 `Le sucré` · `Le salé` · `L'acide` · `L'amer` · `L'umami`
 
-### FA-013 — Les pièces de la maison (10 cartes)
+### FA-013 — Les pièces de la maison (13 cartes)
 
 Même maison, même famille : on doit entendre que c'est le même logement.
 
-`L'entrée` · `La cuisine` · `Le salon` · `La chambre` · `La salle de bain` · `Le couloir` · `La cave` · `Le grenier` · `Le garage` · `Le jardin`
+`L'entrée` · `La cuisine` · `Le salon` · `La chambre` · `La salle de bain` · `Le couloir` · `La cave` · `Le grenier` · `Le garage` · `Le jardin` · `Le bureau` · `La buanderie` · `La véranda`
 
 ### FA-014 — Les familles de l'orchestre (5 cartes)
 
@@ -1099,11 +1225,11 @@ Sans jamais utiliser un seul instrument de la famille en question.
 
 `Les cordes` · `Les bois` · `Les cuivres` · `Les percussions` · `Les claviers`
 
-### FA-015 — Les transports (12 cartes)
+### FA-015 — Les transports (14 cartes)
 
 Toujours le même trajet, du départ à l'arrivée. Seul le véhicule change.
 
-`Le vélo` · `La trottinette` · `La voiture` · `Le bus` · `Le tramway` · `Le métro` · `Le train` · `Le bateau` · `L'avion` · `L'hélicoptère` · `Le téléphérique` · `La montgolfière`
+`Le vélo` · `La trottinette` · `La voiture` · `Le bus` · `Le tramway` · `Le métro` · `Le train` · `Le bateau` · `L'avion` · `L'hélicoptère` · `Le téléphérique` · `La montgolfière` · `Le skate` · `Le taxi`
 
 ### FA-016 — Les catastrophes naturelles (8 cartes)
 
@@ -1153,11 +1279,11 @@ Aucune musique, aucune voix : l'émotion doit venir des sons du quotidien.
 
 `La joie` · `La tristesse` · `La colère` · `La peur` · `Le dégoût` · `La surprise` · `Le mépris`
 
-### FA-024 — Les portes (10 cartes)
+### FA-024 — Les portes (13 cartes)
 
 Un seul geste pour tout le monde : ouvrir et fermer. Tout tient dans la différence.
 
-`La porte de garage` · `La porte blindée` · `La porte de grange` · `La porte-fenêtre` · `La portière de voiture` · `La porte de cellule` · `La porte d'ascenseur` · `La porte battante` · `La porte de réfrigérateur` · `La porte de cabine téléphonique`
+`La porte de garage` · `La porte blindée` · `La porte de grange` · `La porte-fenêtre` · `La portière de voiture` · `La porte de cellule` · `La porte d'ascenseur` · `La porte battante` · `La porte de réfrigérateur` · `La porte de cabine téléphonique` · `La porte de four` · `La trappe de grenier` · `Le portail en fer forgé`
 
 ### FA-025 — Les silences (8 cartes)
 
@@ -1177,17 +1303,17 @@ Le vent ne s'entend que par ce qu'il rencontre : à chacun de choisir son obstac
 
 `La brise` · `Le zéphyr` · `Le mistral` · `La tramontane` · `Le sirocco` · `L'alizé` · `La bourrasque` · `L'ouragan`
 
-### FA-028 — Les épices (10 cartes)
+### FA-028 — Les épices (13 cartes)
 
 Traduire une épice par sa texture et sa chaleur, jamais par la cuisine.
 
-`Le poivre` · `La cannelle` · `Le safran` · `Le cumin` · `Le gingembre` · `La vanille` · `Le piment` · `La muscade` · `Le clou de girofle` · `Le curry`
+`Le poivre` · `La cannelle` · `Le safran` · `Le cumin` · `Le gingembre` · `La vanille` · `Le piment` · `La muscade` · `Le clou de girofle` · `Le curry` · `Le paprika` · `La cardamome` · `L'anis étoilé`
 
-### FA-029 — Les contes (10 cartes)
+### FA-029 — Les contes (13 cartes)
 
 Le conte entier en une minute, sans un mot, sans narrateur.
 
-`Le Petit Chaperon rouge` · `Cendrillon` · `Hansel et Gretel` · `La Belle au bois dormant` · `Le Petit Poucet` · `Barbe-Bleue` · `Les Trois Petits Cochons` · `Boucle d'or` · `Pinocchio` · `La Petite Sirène`
+`Le Petit Chaperon rouge` · `Cendrillon` · `Hansel et Gretel` · `La Belle au bois dormant` · `Le Petit Poucet` · `Barbe-Bleue` · `Les Trois Petits Cochons` · `Boucle d'or` · `Pinocchio` · `La Petite Sirène` · `Le Chat botté` · `Peau d'Âne` · `Blanche-Neige`
 
 ### FA-030 — Les fables (8 cartes)
 
@@ -1201,21 +1327,45 @@ Faire entendre la danse par les corps et le sol, jamais par la musique.
 
 `La valse` · `Le tango` · `Le rock` · `La salsa` · `La techno` · `Le hip-hop` · `La country` · `La java`
 
-### FA-032 — Les métiers de la rue (10 cartes)
+### FA-032 — Les métiers de la rue (13 cartes)
 
 Un métier chacun, tous dans la même rue, à la même heure.
 
-`Le boulanger` · `Le marchand de journaux` · `Le facteur` · `L'éboueur` · `Le livreur` · `Le serveur` · `Le coiffeur` · `Le cordonnier` · `Le fleuriste` · `Le pharmacien`
+`Le boulanger` · `Le marchand de journaux` · `Le facteur` · `L'éboueur` · `Le livreur` · `Le serveur` · `Le coiffeur` · `Le cordonnier` · `Le fleuriste` · `Le pharmacien` · `Le serrurier` · `Le marchand de glaces` · `Le vitrier`
 
-### FA-033 — Les animaux de la ferme (10 cartes)
+### FA-033 — Les animaux de la ferme (13 cartes)
 
 Interdiction du cri de l'animal : il doit se reconnaître à ses déplacements.
 
-`La vache` · `Le cheval` · `Le cochon` · `La poule` · `Le coq` · `Le mouton` · `La chèvre` · `Le canard` · `L'oie` · `Le chien de berger`
+`La vache` · `Le cheval` · `Le cochon` · `La poule` · `Le coq` · `Le mouton` · `La chèvre` · `Le canard` · `L'oie` · `Le chien de berger` · `Le lapin` · `Le dindon` · `L'âne`
 
-### FA-034 — Les monuments de Paris (10 cartes)
+### FA-034 — Les monuments de Paris (13 cartes)
 
 Le monument sans les touristes : c'est le bâtiment qui doit sonner.
 
-`La tour Eiffel` · `Notre-Dame` · `Le Sacré-Cœur` · `L'Arc de triomphe` · `Le Louvre` · `L'Opéra Garnier` · `La Grande Arche` · `Le Panthéon` · `La place de la Concorde` · `Les Catacombes`
+`La tour Eiffel` · `Notre-Dame` · `Le Sacré-Cœur` · `L'Arc de triomphe` · `Le Louvre` · `L'Opéra Garnier` · `La Grande Arche` · `Le Panthéon` · `La place de la Concorde` · `Les Catacombes` · `Le pont Neuf` · `Les Invalides` · `La Sainte-Chapelle`
+
+### FA-035 — La cuisine au réveil (14 cartes)
+
+Une seule cuisine, un seul matin : chacun son appareil, et tous les rendus doivent pouvoir se superposer.
+
+`La bouilloire` · `Le grille-pain` · `Le réfrigérateur` · `Le lave-vaisselle` · `La hotte` · `Le mixeur` · `La cocotte-minute` · `Le robinet` · `Le tiroir à couverts` · `La poêle` · `Le four` · `La machine à café` · `La planche à découper` · `Le micro-ondes`
+
+### FA-036 — Les genres de cinéma (14 cartes)
+
+Même scène pour tous : quelqu'un entre dans une pièce et trouve une lettre. Seul le genre change.
+
+`Le western` · `Le film noir` · `La comédie musicale` · `Le film d'horreur` · `La science-fiction` · `Le film de guerre` · `Le dessin animé` · `Le film de cape et d'épée` · `Le road movie` · `Le film catastrophe` · `Le documentaire animalier` · `Le film muet` · `Le péplum` · `Le film d'espionnage`
+
+### FA-037 — La ville à trois heures du matin (14 cartes)
+
+Même nuit, même ville. Mis bout à bout, les rendus doivent former une seule traversée.
+
+`La laverie automatique` · `Le parking souterrain` · `La station-service` · `Le quai de métro` · `Le fournil de la boulangerie` · `Les urgences` · `Le snack ouvert la nuit` · `Le pont` · `Le toit d'immeuble` · `La cage d'escalier` · `Le distributeur de billets` · `Le périphérique` · `Le port` · `Le square`
+
+### FA-038 — Les gestes du studio (14 cartes)
+
+Faire entendre le métier : chaque geste doit se reconnaître, même pour quelqu'un qui n'est jamais entré dans un studio.
+
+`Armer la piste` · `Le clap de synchro` · `Le casque qu'on pose` · `Le talkback` · `Le câble qu'on branche` · `Le métronome` · `La prise ratée` · `La prise gardée` · `Le fader qu'on monte` · `Le bounce` · `Le larsen` · `Le café de la pause` · `La porte du studio` · `Les machines qu'on éteint`
 

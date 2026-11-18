@@ -14,20 +14,19 @@ Une seule page HTML, sans installation, sans connexion : elle marche sur Mac, Wi
 
 **En classe, sans rien distribuer** : le générateur est en ligne à l’adresse **<https://theovoneuw-cell.github.io/sujets-sound-design/>** (GitHub Pages, mis à jour automatiquement à chaque push sur `main`). Les étudiants l’ouvrent sur leur propre machine, sans rien télécharger.
 
-Toute la page est un téléviseur cathodique : réglages à gauche, sujet diffusé à droite, chrono et réglages d'image sur la façade du bas. Tout tient en une seule vue, sans défilement.
+Une barre en haut (chrono, banque, clair / sombre, projection), les réglages à gauche, le sujet à droite. Sur téléphone, tout s'empile.
 
 ## Utiliser
 
-L'étudiant (ou l'enseignant) choisit :
-
 | Réglage | Options |
 |---|---|
-| **Travail** | Sound design seul · Composition seule · Compo + sound design |
-| **Niveau** | Au hasard · 1 Fondamentaux · 2 Confirmé · 3 Expert |
-| **En groupe** | Non, ou 2 à 12 participants (exercice de famille, une carte chacun) |
-| **Durée** | Au hasard · Court 20-40 s · Moyen 1-2 min · Long 3 min + |
+| **Travail** | Sound design · Composition · Les deux |
+| **Niveau** | Hasard · 1 Fondamentaux · 2 Confirmé · 3 Expert (= nombre de contraintes) |
+| **Durée** | Hasard · Court 20-40 s · Moyen 1-2 min · Long 3 min + |
+| **Pour qui** | Un sujet · Famille (une carte par participant, consigne commune) · La classe (un sujet différent par étudiant) |
+| **Dans le sujet** | Intention et contraintes, chacune décochable |
 
-Puis **TIRER UN SUJET** (ou la barre d'espace).
+Puis **Tirer un sujet** (ou la barre d'espace).
 
 ### Ce que contient un sujet
 
@@ -35,29 +34,42 @@ Puis **TIRER UN SUJET** (ou la barre d'espace).
 |---|---|
 | **La scène** / **La commande** | Ce qu'il se passe, ce qu'on demande. Une à deux phrases. |
 | **Ce qui doit s'entendre** | Le critère de réussite, vérifiable à l'écoute. C'est là-dessus que le rendu est évalué. |
-| **Intention / registre** | Le ton demandé. Il est tiré séparément de la scène : les associations inattendues sont voulues. |
-| **Contraintes techniques** | 1 en niveau 1, 2 en niveau 2, 3 en niveau 3, choisies dans le lot autorisé au niveau. |
+| **Intention** | Le ton demandé, tiré séparément de la scène : les associations inattendues sont voulues. |
+| **Contraintes techniques** | 1 en niveau 1, 2 en niveau 2, 3 en niveau 3. Deux contraintes contradictoires ne tombent jamais ensemble (deux tempos, synthèse + Foley…). |
 | **Rendu** | Durée, format (WAV 48 kHz / 24 bits) et nom de fichier attendu : `RÉF_NOM.wav`. |
 
 Chaque sujet porte une référence (`SD-042`, `CO-017`, `MX-078`, `FA-012` pour les familles) : pratique pour dire « refais-moi le SD-042 » ou pour nommer un rendu.
 
-Les boutons sous l'écran : **↻ Intention** et **↻ Contraintes** retirent au sort sans changer la scène. **Copier** met le sujet complet en texte brut dans le presse-papier. **Imprimer** ne sort que le sujet, en noir sur blanc, avec un cartouche nom / date.
+### Décocher, retirer, ajouter
+
+- **Dans un sujet tiré** : chaque intention et chaque contrainte a sa case. Décochée, elle est barrée et disparaît du texte copié et de la feuille imprimée. La flèche à droite en tire une autre à la place ; « Tout changer » retire toutes les contraintes ; « + Ajouter une contrainte » en ajoute une compatible.
+- **Dans les réglages** : « Intention / registre » et « Contraintes techniques » s'enlèvent entièrement du sujet.
+- **Banque** (bouton en haut) : liste complète des contraintes et intentions. Une case décochée ne tombe plus au tirage. Le réglage reste dans le navigateur.
+
+### Famille et classe
+
+- **Famille** : un thème commun (les couleurs, la ville à 3 h du matin…), une carte différente par participant. 16 familles ont au moins 13 cartes, le maximum est 16.
+- **La classe** : un sujet différent pour chaque étudiant (jusqu'à 40), sur une grille de cartes. Chaque carte se décoche, se retire (« Autre sujet ») ou s'agrandit pour la projeter ; ← → passent d'un étudiant à l'autre.
+- **Prénoms** : facultatifs, un par ligne. Le nombre de participants suit la liste et chaque fiche porte le prénom. Ils restent dans le navigateur, rien n'est envoyé.
 
 ### Sujet du jour
 
-Donne le **même sujet à toute la classe** pour une date et des réglages donnés, sans rien distribuer. Il change tout seul le lendemain et ne consomme pas la banque.
+Donne le **même tirage à tout le monde** pour une date et des réglages donnés. Il change tout seul le lendemain et ne consomme pas la banque.
 
 ### Pas de répétition
 
-Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le lien en bas à gauche remet le compteur à zéro. La mémoire est propre à chaque ordinateur et à chaque navigateur.
+Les sujets tirés sont mémorisés par le navigateur et ne reviennent qu'une fois tous ceux du filtre épuisés. Le compteur sous le bouton indique combien ont déjà été tirés ; « Remettre à zéro » vide l'historique.
 
-### Façade du poste
+### Barre du haut
 
 | | |
 |---|---|
-| **Chrono** | 15 min à 3 h. Trois bips à la fin, puis il passe en négatif pour montrer le dépassement. Il s'affiche aussi en bas à droite de l'écran. |
-| **Phosphore** | Ambre / vert / blanc — retinte toute l'interface. |
-| **Balayage** | Coupe les lignes de balayage si elles gênent la lecture (vidéoprojecteur, écran fatigué). |
+| **Chrono** | 5 min à 3 h. Trois bips à la fin, puis il passe en négatif. Le temps s'affiche aussi dans l'onglet. Une contrainte « temps limité » le règle toute seule. |
+| **Banque** | Choisir ce qui peut tomber. |
+| **Clair / sombre** | Suit le système par défaut. |
+| **Projeter** (touche P) | Plein écran, texte agrandi, réglages masqués. Échap pour sortir. |
+
+**Copier le texte** met le sujet (ou toute la classe) en texte brut dans le presse-papier. **Imprimer** ne sort que les sujets, noir sur blanc, avec un cartouche nom / date.
 
 ## Logo et icône pour le bureau du Mac
 
@@ -77,10 +89,10 @@ Pour régénérer les icônes après une modification du SVG : rends `logo/logo.
 
 | | |
 |---|---|
-| Sound design seul | 97 sujets |
-| Composition seule | 89 sujets |
-| Compo + sound design | 95 sujets |
-| **Total** | **281 sujets** × 34 intentions × 47 contraintes, + 34 exercices de famille |
+| Sound design seul | 110 sujets |
+| Composition seule | 101 sujets |
+| Compo + sound design | 106 sujets |
+| **Total** | **317 sujets** × 42 intentions × 57 contraintes, + 38 exercices de famille |
 
 Chaque combinaison niveau × durée de chaque mode contient au moins trois sujets.
 
@@ -108,7 +120,7 @@ Une contrainte :
 {t:"Le texte de la contrainte.",min:2},
 ```
 
-`min` = niveau à partir duquel elle peut tomber (`2` = jamais en niveau 1). `CONS.common` = tous les modes, `CONS.sd` = sound design, `CONS.compo` = composition.
+`min` = niveau à partir duquel elle peut tomber (`2` = jamais en niveau 1). Facultatif : `k` (une clé) et `x` (les clés incompatibles) pour que deux contraintes contradictoires ne tombent jamais ensemble, `chrono:45` pour régler le chrono quand elle tombe. `CONS.common` = tous les modes, `CONS.sd` = sound design, `CONS.compo` = composition.
 
 Une intention : une simple ligne de texte entre guillemets dans `INTENTIONS`.
 
@@ -120,4 +132,4 @@ Une famille (exercice de groupe) :
 
 Le nombre de cartes fixe la taille maximale du groupe pour cette famille.
 
-Garde au moins un sujet dans chaque combinaison niveau × durée de chaque mode, sinon ce réglage affichera « HORS PORTÉE ».
+Garde au moins un sujet dans chaque combinaison niveau × durée de chaque mode, sinon ce réglage affichera « Rien ne correspond ».
